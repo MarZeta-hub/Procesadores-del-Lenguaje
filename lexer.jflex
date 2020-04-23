@@ -76,6 +76,13 @@ Boolean = ( [Tt] [Rr] [Uu] [Ee] ) | ( [Ff] [Aa] [Ll] [Ss] [Ee] )
 /* Caracter */
 Char = "'" [^] "'"
 
+/* Lógico */
+
+Land = ([Aa][Nn][Dd]) | "&"
+Lor  = ([Oo][Rr]) | "|"
+Lnot = ([Nn][Oo][Tt]) | "!"
+
+
 /* Comentarios */
 Comment = {TraditionalComment} | {EndOfLineComment} 
 TraditionalComment = "<!--" {CommentContent} "-->" //Comentario de abierto y cerrado
@@ -93,18 +100,28 @@ CommentContent = ([^-]|-[^-]|--+[^->])*            //Contenido de comentario
 <YYINITIAL> {
 
   {Whitespace} {                              }
+  {Comment}    {}
   ";"          { return symbolFactory.newSymbol("SEMI", SEMI); }
   "+"          { return symbolFactory.newSymbol("PLUS", PLUS); }
   "-"          { return symbolFactory.newSymbol("MINUS", MINUS); }
   "*"          { return symbolFactory.newSymbol("TIMES", TIMES); }
+  "/"          { return symbolFactory.newSymbol("DIV", DIV); }
+  "<"          { return symbolFactory.newSymbol("MENOR", MENOR); }
+  ">"          { return symbolFactory.newSymbol("MAYOR", MAYOR); }
+  "="          { return symbolFactory.newSymbol("IGUAL", IGUAL); }
   "n"          { return symbolFactory.newSymbol("UMINUS", UMINUS); }
   "("          { return symbolFactory.newSymbol("LPAREN", LPAREN); }
   ")"          { return symbolFactory.newSymbol("RPAREN", RPAREN); }
-  ":="         { return symbolFactory.newSymbol("DECLA", DECLA); }
-  {Comment}    {}
+  ":"          { return symbolFactory.newSymbol("DPTOS", DPTOS); }
+  "{"          { return symbolFactory.newSymbol("LCORCH", LCORCH); }     
+  "}"          { return symbolFactory.newSymbol("RCORCH", RCORCH); }
+  {Land}       { return symbolFactory.newSymbol("AND",AND); }
+  {Lor }       { return symbolFactory.newSymbol("OR", OR); }
+  {Lnot}       { return symbolFactory.newSymbol("NOT", NOT); }
   "ENTERO"     { return symbolFactory.newSymbol("DENTERO", DENTERO);}
   "REAL"       { return symbolFactory.newSymbol("DREAL", DREAL);}
   "CARACTER"   { return symbolFactory.newSymbol("DCARACTER", DCARACTER);}
+  "BOOLEAN"    { return symbolFactory.newSymbol("DBOOLEAN", DBOOLEAN);}
   {Int}        { return symbolFactory.newSymbol("INT", INT, Integer.parseInt(yytext())); }
   {Real}       { return symbolFactory.newSymbol("REAL", REAL, Double.parseDouble(yytext()));}
   {Boolean}    { return symbolFactory.newSymbol("BOOLEAN", BOOLEAN, Boolean.parseBoolean(yytext()));}

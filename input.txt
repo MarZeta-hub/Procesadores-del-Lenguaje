@@ -2,5 +2,5 @@
 # me mola mazo
 #jeej
 
-ENTERO true := 90;
+ENTERO entero := 90;
 REAL hey := 90;
