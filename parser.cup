@@ -32,7 +32,7 @@ scan with {: return lexer.next_token(); :};
 
 /* Terminals (tokens returned by the scanner). */
 terminal            SEMI, PLUS, MINUS, TIMES, DIV, MENOR, MAYOR, IGUAL,UMINUS,
-					LPAREN, RPAREN, DPTOS, LCORCH, RCORCH, AND, OR, NOT,
+					LPAREN, RPAREN, DPTOS, LCORCH, RCORCH, COMA, AND, OR, NOT,
                     DENTERO, DREAL, DCARACTER, DBOOLEAN, 
                     RETURN, FUNCION, MIENTRAS, FINMIENTRAS, STRUCT, SI, FINSI, ENTONCES ;
 terminal Integer    INT;        // our scanner provides numbers as integers

@@ -63,11 +63,11 @@ Whitespace = [ \t\f] | {Newline}
 id = [a-zA-Z][a-zA-Z0-9"_""-"]*
 
 /* Numeros Enteros*/
-Int = [+-]? ( ( [1-9] [0-9]+ ) | "0") {Exp}?   //Numeros detectados como enteros
+Int = [+-]? ( ( [1-9] [0-9]* ) | "0" ) {Exp}?   //Numeros detectados como enteros
 Hexadecimal =  0 [xX] 0* [0-9a-fA-F]+          //Para los números hexadecimales
 
 /* Numeros Reales*/
-Real  = ({Double1} | {Double2}) {Exp}? 
+Real       = ({Double1} | {Double2}) {Exp}? 
 Double1    = [+-]? [0-9]+ [.] [0-9]+     //Primer tipo de double
 Double2    = [+-]? [.] [0-9]+			 //Segundo tipo de double
 Exp        = [eE] [+-]? [0-9]+			 //En el caso de que sea exponencial
@@ -101,7 +101,6 @@ CommentContent = ([^-]|-[^-]|--+[^->])*            //Contenido de comentario
 <YYINITIAL> {
 
   {Whitespace} {}
-  {Comment}     {/* IGNORAMOS LOS COMENTARIOS */}
   ";"           { return symbolFactory.newSymbol("SEMI", SEMI); }
   "+"           { return symbolFactory.newSymbol("PLUS", PLUS); }
   "-"           { return symbolFactory.newSymbol("MINUS", MINUS); }
@@ -116,6 +115,7 @@ CommentContent = ([^-]|-[^-]|--+[^->])*            //Contenido de comentario
   ":"           { return symbolFactory.newSymbol("DPTOS", DPTOS); }
   "{"           { return symbolFactory.newSymbol("LCORCH", LCORCH); }     
   "}"           { return symbolFactory.newSymbol("RCORCH", RCORCH); }
+  ","           { return symbolFactory.newSymbol("COMA", COMA); }
   {Land}        { return symbolFactory.newSymbol("AND",AND); }
   {Lor }        { return symbolFactory.newSymbol("OR", OR); }
   {Lnot}        { return symbolFactory.newSymbol("NOT", NOT); }
@@ -137,6 +137,7 @@ CommentContent = ([^-]|-[^-]|--+[^->])*            //Contenido de comentario
   {Boolean}     { return symbolFactory.newSymbol("BOOLEAN", BOOLEAN, Boolean.parseBoolean(yytext()));}
   {Char}        { return symbolFactory.newSymbol("CHAR", CHAR, yytext().charAt(1) );}
   {id}          { return symbolFactory.newSymbol("id", id);}
+  {Comment}     { }    /* IGNORAMOS LOS COMENTARIOS */
 }
 
 // error fallback
