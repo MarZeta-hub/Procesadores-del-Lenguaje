@@ -31,9 +31,10 @@ init with {:
 scan with {: return lexer.next_token(); :};
 
 /* Terminals (tokens returned by the scanner). */
-terminal            SEMI, PLUS, MINUS, TIMES, DIV, UMINUS, LPAREN, RPAREN, DPTOS,
-                    DENTERO, DREAL, DCARACTER, DBOOLEAN, RCORCH, LCORCH,
-                    MENOR, MAYOR, IGUAL, AND, OR, NOT;
+terminal            SEMI, PLUS, MINUS, TIMES, DIV, MENOR, MAYOR, IGUAL,UMINUS,
+					LPAREN, RPAREN, DPTOS, LCORCH, RCORCH, AND, OR, NOT,
+                    DENTERO, DREAL, DCARACTER, DBOOLEAN, 
+                    RETURN, FUNCION, MIENTRAS, FINMIENTRAS, STRUCT, SI, FINSI, ENTONCES ;
 terminal Integer    INT;        // our scanner provides numbers as integers
 terminal Double 	REAL;
 terminal Boolean    BOOLEAN;

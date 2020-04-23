@@ -8,56 +8,74 @@ package cup.example;
 /** CUP generated interface containing symbol constants. */
 public interface sym {
   /* terminals */
-  public static final int TIMES = 7;
-  public static final int AND = 19;
-  public static final int MENOR = 16;
-  public static final int PLUS = 3;
-  public static final int INT = 22;
-  public static final int OR = 20;
-  public static final int IGUAL = 18;
-  public static final int RPAREN = 9;
-  public static final int CHAR = 25;
+  public static final int DREAL = 20;
+  public static final int CHAR = 34;
+  public static final int UMINUS = 10;
+  public static final int SI = 28;
+  public static final int FUNCION = 24;
+  public static final int LPAREN = 11;
   public static final int SEMI = 2;
-  public static final int NOT = 21;
-  public static final int LPAREN = 8;
-  public static final int DPTOS = 10;
-  public static final int BOOLEAN = 24;
-  public static final int MAYOR = 17;
-  public static final int EOF = 0;
-  public static final int id = 26;
-  public static final int DIV = 5;
-  public static final int RCORCH = 14;
-  public static final int DCARACTER = 13;
+  public static final int ENTONCES = 30;
+  public static final int LCORCH = 14;
+  public static final int INT = 31;
   public static final int MINUS = 4;
+  public static final int RPAREN = 12;
+  public static final int RCORCH = 15;
+  public static final int NOT = 18;
+  public static final int AND = 16;
+  public static final int DCARACTER = 21;
+  public static final int IGUAL = 9;
+  public static final int FINMIENTRAS = 26;
+  public static final int DENTERO = 19;
+  public static final int OR = 17;
+  public static final int MIENTRAS = 25;
+  public static final int DIV = 6;
+  public static final int PLUS = 3;
+  public static final int EOF = 0;
+  public static final int BOOLEAN = 33;
+  public static final int RETURN = 23;
   public static final int error = 1;
-  public static final int DREAL = 12;
-  public static final int REAL = 23;
-  public static final int LCORCH = 15;
-  public static final int DENTERO = 11;
-  public static final int UMINUS = 6;
+  public static final int MENOR = 7;
+  public static final int REAL = 32;
+  public static final int MAYOR = 8;
+  public static final int TIMES = 5;
+  public static final int id = 35;
+  public static final int DBOOLEAN = 22;
+  public static final int DPTOS = 13;
+  public static final int FINSI = 29;
+  public static final int STRUCT = 27;
   public static final String[] terminalNames = new String[] {
   "EOF",
   "error",
   "SEMI",
   "PLUS",
   "MINUS",
-  "DIV",
-  "UMINUS",
   "TIMES",
-  "LPAREN",
-  "RPAREN",
-  "DPTOS",
-  "DENTERO",
-  "DREAL",
-  "DCARACTER",
-  "RCORCH",
-  "LCORCH",
+  "DIV",
   "MENOR",
   "MAYOR",
   "IGUAL",
+  "UMINUS",
+  "LPAREN",
+  "RPAREN",
+  "DPTOS",
+  "LCORCH",
+  "RCORCH",
   "AND",
   "OR",
   "NOT",
+  "DENTERO",
+  "DREAL",
+  "DCARACTER",
+  "DBOOLEAN",
+  "RETURN",
+  "FUNCION",
+  "MIENTRAS",
+  "FINMIENTRAS",
+  "STRUCT",
+  "SI",
+  "FINSI",
+  "ENTONCES",
   "INT",
   "REAL",
   "BOOLEAN",

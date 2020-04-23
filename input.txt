@@ -2,5 +2,6 @@
 # me mola mazo
 #jeej
 
-ENTERO entero := 90;
+ENTERO eje := 90;
 REAL hey := 90;
+BooLEan loiOERJ = tRUe;
