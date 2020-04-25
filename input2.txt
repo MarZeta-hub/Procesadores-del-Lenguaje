@@ -1,1 +1,6 @@
 <!-- hola -->
+
+Buleano hola := TRUE;
+hola := true;
+ENTERO jsoelusi := ey;
+josel := 3;

@@ -19,7 +19,7 @@ parser code {:
 init with {:
   ComplexSymbolFactory f = new ComplexSymbolFactory();
   symbolFactory = f;
-  File file = new File("input.txt");
+  File file = new File("input2.txt");
   FileInputStream fis = null;
   try {
     fis = new FileInputStream(file);
@@ -34,33 +34,80 @@ scan with {: return lexer.next_token(); :};
 terminal            SEMI, PLUS, MINUS, TIMES, DIV, MENOR, MAYOR, IGUAL,UMINUS,
 					LPAREN, RPAREN, DPTOS, LCORCH, RCORCH, COMA, AND, OR, NOT,
                     DENTERO, DREAL, DCARACTER, DBOOLEAN, 
-                    RETURN, FUNCION, MIENTRAS, FINMIENTRAS, STRUCT, SI, FINSI, ENTONCES ;
-terminal Integer    INT;        // our scanner provides numbers as integers
-terminal Double 	REAL;
+                    RETURN, FUNCION, MIENTRAS, FINMIENTRAS, STRUCT, SI, SINO, FINSI, ENTONCES ;
+terminal Double 	NUMBER;
 terminal Boolean    BOOLEAN;
 terminal char       CHAR;
-terminal String     id;
+terminal String     ID;
 
 /* Non terminals */
-non terminal            expr_list;
-non terminal Integer    expr;      // used to store evaluated subexpressions
+non terminal            inicio;
+non terminal Double     expr_arit;      // used to store evaluated subexpressions
+non terminal Boolean    expr_log;
+non terminal            declarar;
+non terminal            inicializar;
+non terminal 			solodeclar;
+non terminal            cambiarvalor;
 
 /* Precedences */
+precedence left NOT;
 precedence left PLUS, MINUS;
-precedence left TIMES;
+precedence left TIMES, DIV, AND, OR;
 precedence left UMINUS;
 
+
 /* The grammar rules */
-expr_list ::= expr_list expr:e SEMI         {: System.out.println(e); :}
-            | expr:e SEMI                   {: System.out.println(e); :}
-            ;
-            
-expr      ::= expr:e1 PLUS  expr:e2         {: RESULT = e1+e2;        :}
-             | expr:e1 MINUS expr:e2        {: RESULT = e1-e2;        :}
-             | expr:e1 TIMES expr:e2        {: RESULT = e1*e2;        :}
-             | MINUS expr:e                 {: RESULT = -e;           :}
-             %prec UMINUS
-             | LPAREN expr:e RPAREN	         {: RESULT = e;           :}
-             | INT:n	                     {: RESULT = n;           :}
-             ;
+//REGLAS DE INICIO, ACTUALMENTE SOLO DECLARACION DE VARIABLES Y CAMBIO DE VALOR
+inicio        ::= inicio declarar SEMI
+                | declarar SEMI
+                | inicio inicializar SEMI
+                | inicializar SEMI
+                ;
+                
+//PARA DECLARAR UNA NUEVA VARIABLE SEGUN SU TIPO		  						
+declarar      ::= DENTERO   inicializar
+			    | DREAL     inicializar
+			    | DCARACTER inicializar
+			    | DBOOLEAN  inicializar
+			    ;     
        
+// PARA INICIALIZAR UNA VARIABLE O SOLO DECLARARLA          
+inicializar   ::= cambiarvalor
+		        | solodeclar
+		        ;
+		        
+// PARA DECLARAR UNA VARIABLE O VARIAS		        
+solodeclar    ::= ID COMA solodeclar
+		        | ID	  		 				
+		  		;   
+
+//PARA CAMBIAR EL VALOR DE UNA VARIABLE       
+cambiarvalor  ::= ID DPTOS IGUAL expr_arit:e
+                | ID DPTOS IGUAL expr_log:e 
+                | ID DPTOS IGUAL CHAR 
+		        ;		
+		  		
+// CALCULOS SOBRE VALORES ARITMETICOS           	
+expr_arit     ::= expr_arit:e1 PLUS  expr_arit:e2   {: RESULT = e1+e2; :}
+                | expr_arit:e1 MINUS expr_arit:e2   {: RESULT = e1-e2; :}
+                | expr_arit:e1 TIMES expr_arit:e2   {: RESULT = e1*e2; :}
+                | expr_arit:e1 DIV   expr_arit:e2   {: RESULT = e1/e2; :}
+                | MINUS expr_arit:e                 {: RESULT = -e;    :}
+                 %prec UMINUS
+                | LPAREN expr_arit:e RPAREN	        {: RESULT = e;     :}
+                | NUMBER:n	                        {: RESULT = n;     :}
+                | ID:n                              {: RESULT = -1.0;     :}
+                ;
+
+//CALCULOS SOBRE VALORES LOGICOS            
+expr_log      ::= expr_arit:e1 MAYOR expr_arit:e2 
+				| expr_arit:e1 MENOR expr_arit:e2 
+				| expr_arit:e1 MAYOR IGUAL expr_arit:e2
+				| expr_arit:e1 MENOR IGUAL expr_arit:e2
+				| expr_arit:e1 IGUAL IGUAL expr_arit:e2
+				| NOT expr_log:e
+				| expr_log:e1 AND expr_log:e2
+				| expr_log:e1 OR expr_log:e2
+                | BOOLEAN:n
+                //| ID:n
+			    ;

@@ -15,9 +15,8 @@ public interface sym {
   public static final int FUNCION = 25;
   public static final int LPAREN = 11;
   public static final int SEMI = 2;
-  public static final int ENTONCES = 31;
+  public static final int ENTONCES = 32;
   public static final int LCORCH = 14;
-  public static final int INT = 32;
   public static final int MINUS = 4;
   public static final int RPAREN = 12;
   public static final int RCORCH = 15;
@@ -26,24 +25,25 @@ public interface sym {
   public static final int DCARACTER = 22;
   public static final int IGUAL = 9;
   public static final int FINMIENTRAS = 27;
+  public static final int SINO = 30;
   public static final int DENTERO = 20;
   public static final int OR = 18;
   public static final int MIENTRAS = 26;
   public static final int DIV = 6;
   public static final int PLUS = 3;
+  public static final int ID = 36;
   public static final int EOF = 0;
   public static final int BOOLEAN = 34;
   public static final int RETURN = 24;
   public static final int error = 1;
   public static final int COMA = 16;
   public static final int MENOR = 7;
-  public static final int REAL = 33;
+  public static final int NUMBER = 33;
   public static final int MAYOR = 8;
   public static final int TIMES = 5;
-  public static final int id = 36;
   public static final int DBOOLEAN = 23;
   public static final int DPTOS = 13;
-  public static final int FINSI = 30;
+  public static final int FINSI = 31;
   public static final int STRUCT = 28;
   public static final String[] terminalNames = new String[] {
   "EOF",
@@ -76,13 +76,13 @@ public interface sym {
   "FINMIENTRAS",
   "STRUCT",
   "SI",
+  "SINO",
   "FINSI",
   "ENTONCES",
-  "INT",
-  "REAL",
+  "NUMBER",
   "BOOLEAN",
   "CHAR",
-  "id"
+  "ID"
   };
 }
 

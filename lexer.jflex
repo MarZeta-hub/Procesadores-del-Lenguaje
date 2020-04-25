@@ -88,7 +88,7 @@ Lnot = "not" | "!"  				   //NOT logico
 Comment = {TraditionalComment} | {EndOfLineComment} 
 TraditionalComment = "<!--" {CommentContent} "-->" //Comentario de abierto y cerrado
 EndOfLineComment = "#" [^\r\n]* {Newline}          //Comentario de linea
-CommentContent = ([^-]|-[^-]|--+[^->])*            //Contenido de comentario
+CommentContent = ( [-]* |[^-] | -[^-] | --+[^->])*            //Contenido de comentario
 
 %eofval{
     return symbolFactory.newSymbol("EOF",sym.EOF);
@@ -122,7 +122,7 @@ CommentContent = ([^-]|-[^-]|--+[^->])*            //Contenido de comentario
   "ENTERO"      { return symbolFactory.newSymbol("DENTERO", DENTERO);}
   "REAL"        { return symbolFactory.newSymbol("DREAL", DREAL);}
   "CARACTER"    { return symbolFactory.newSymbol("DCARACTER", DCARACTER);}
-  "BOOLEAN"     { return symbolFactory.newSymbol("DBOOLEAN", DBOOLEAN);}
+  "BULEANO"    { return symbolFactory.newSymbol("DBOOLEAN", DBOOLEAN);}
   "RETURN"      { return symbolFactory.newSymbol("RETURN", RETURN);}
   "FUNCION"     { return symbolFactory.newSymbol("FUNCION", FUNCION);}
   "MIENTAS"     { return symbolFactory.newSymbol("MIENTRAS", MIENTRAS);}
@@ -130,13 +130,14 @@ CommentContent = ([^-]|-[^-]|--+[^->])*            //Contenido de comentario
   "ENTONCES"    { return symbolFactory.newSymbol("ENTONCES", ENTONCES );}
   "Struct"      { return symbolFactory.newSymbol("STRUCT", STRUCT );}
   "SI"          { return symbolFactory.newSymbol("SI", SI );}
+  "SINO"        { return symbolFactory.newSymbol("SINO", SINO );}
   "FINSI"       { return symbolFactory.newSymbol("FINSI", FINSI );}
-  {Int}         { return symbolFactory.newSymbol("INT", INT, Integer.parseInt(yytext())); }
-  {Real}        { return symbolFactory.newSymbol("REAL", REAL, Double.parseDouble(yytext()));}
-  {Hexadecimal} { return symbolFactory.newSymbol("INT", INT, (double) Integer.parseInt(yytext().substring(2), 16)); }
+  {Int}         { return symbolFactory.newSymbol("NUMBER", NUMBER, Double.parseDouble(yytext()));}
+  {Real}        { return symbolFactory.newSymbol("NUMBER", NUMBER, Double.parseDouble(yytext()));}
+  {Hexadecimal} { return symbolFactory.newSymbol("NUMBER", NUMBER, (double) Integer.parseInt(yytext().substring(2), 16)); }
   {Boolean}     { return symbolFactory.newSymbol("BOOLEAN", BOOLEAN, Boolean.parseBoolean(yytext()));}
   {Char}        { return symbolFactory.newSymbol("CHAR", CHAR, yytext().charAt(1) );}
-  {id}          { return symbolFactory.newSymbol("id", id);}
+  {id}          { return symbolFactory.newSymbol("ID", ID);}
   {Comment}     { }    /* IGNORAMOS LOS COMENTARIOS */
 }
 
