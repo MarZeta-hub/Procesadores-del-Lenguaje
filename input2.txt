@@ -1,6 +1,5 @@
 <!-- hola -->
 
 Buleano hola := TRUE;
-hola := true;
-ENTERO jsoelusi := ey;
-josel := 3;
+entero hola := 1;
+buleano he := 1 < 7;

@@ -1,7 +1,4 @@
-/*
-   Simple +/-/* expression language; 
-   parser evaluates constant expressions on the fly
-*/
+
 
 package cup.example;
 
@@ -45,9 +42,15 @@ non terminal            inicio;
 non terminal Double     expr_arit;      // used to store evaluated subexpressions
 non terminal Boolean    expr_log;
 non terminal            declarar;
-non terminal            inicializar;
-non terminal 			solodeclar;
 non terminal            cambiarvalor;
+non terminal 			entero;
+non terminal 			de_enteros;
+non terminal            real;
+non terminal            de_real;
+non terminal            caracter;
+non terminal            de_caracter;
+non terminal            buleano;
+non terminal            de_buleano;
 
 /* Precedences */
 precedence left NOT;
@@ -60,33 +63,55 @@ precedence left UMINUS;
 //REGLAS DE INICIO, ACTUALMENTE SOLO DECLARACION DE VARIABLES Y CAMBIO DE VALOR
 inicio        ::= inicio declarar SEMI
                 | declarar SEMI
-                | inicio inicializar SEMI
-                | inicializar SEMI
+                | inicio cambiarvalor SEMI
+                | cambiarvalor SEMI
                 ;
                 
 //PARA DECLARAR UNA NUEVA VARIABLE SEGUN SU TIPO		  						
-declarar      ::= DENTERO   inicializar
-			    | DREAL     inicializar
-			    | DCARACTER inicializar
-			    | DBOOLEAN  inicializar
+declarar      ::= DENTERO   entero
+			    | DREAL     real
+			    | DCARACTER caracter
+			    | DBOOLEAN  buleano
 			    ;     
        
-// PARA INICIALIZAR UNA VARIABLE O SOLO DECLARARLA          
-inicializar   ::= cambiarvalor
-		        | solodeclar
-		        ;
-		        
-// PARA DECLARAR UNA VARIABLE O VARIAS		        
-solodeclar    ::= ID COMA solodeclar
-		        | ID	  		 				
-		  		;   
+entero        ::= ID DPTOS IGUAL expr_arit:e {: System.out.println(e); :}
+				| de_enteros      
+				;
+				
+de_enteros    ::= ID COMA de_enteros
+				| ID
+				;
+				
+real          ::= ID DPTOS IGUAL expr_arit:e {: System.out.println(e); :}
+				| de_real
+				;
+				
+de_real       ::= ID COMA de_real
+				| ID
+				;
 
+caracter      ::= ID DPTOS IGUAL CHAR 
+				| de_caracter
+				;
+				
+de_caracter   ::= ID COMA de_caracter
+				| ID
+				;
+
+buleano       ::= ID DPTOS IGUAL expr_log:e 
+				| de_buleano
+				;
+				
+de_buleano    ::= ID COMA de_buleano
+				| ID
+				;
+				
 //PARA CAMBIAR EL VALOR DE UNA VARIABLE       
-cambiarvalor  ::= ID DPTOS IGUAL expr_arit:e
-                | ID DPTOS IGUAL expr_log:e 
+cambiarvalor  ::= ID DPTOS IGUAL expr_arit:e 
+                | ID DPTOS IGUAL expr_log:e  
                 | ID DPTOS IGUAL CHAR 
-		        ;		
-		  		
+		        ;	
+		        	
 // CALCULOS SOBRE VALORES ARITMETICOS           	
 expr_arit     ::= expr_arit:e1 PLUS  expr_arit:e2   {: RESULT = e1+e2; :}
                 | expr_arit:e1 MINUS expr_arit:e2   {: RESULT = e1-e2; :}
@@ -96,7 +121,7 @@ expr_arit     ::= expr_arit:e1 PLUS  expr_arit:e2   {: RESULT = e1+e2; :}
                  %prec UMINUS
                 | LPAREN expr_arit:e RPAREN	        {: RESULT = e;     :}
                 | NUMBER:n	                        {: RESULT = n;     :}
-                | ID:n                              {: RESULT = -1.0;     :}
+                | ID:n                              {: RESULT = 1.0; :}
                 ;
 
 //CALCULOS SOBRE VALORES LOGICOS            
@@ -108,6 +133,6 @@ expr_log      ::= expr_arit:e1 MAYOR expr_arit:e2
 				| NOT expr_log:e
 				| expr_log:e1 AND expr_log:e2
 				| expr_log:e1 OR expr_log:e2
-                | BOOLEAN:n
-                //| ID:n
+                | BOOLEAN:n							{: RESULT = n; :}
+                //| ID
 			    ;
