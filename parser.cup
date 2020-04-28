@@ -16,7 +16,7 @@ parser code {:
 init with {:
   ComplexSymbolFactory f = new ComplexSymbolFactory();
   symbolFactory = f;
-  File file = new File("input2.txt");
+  File file = new File("input3.txt");
   FileInputStream fis = null;
   try {
     fis = new FileInputStream(file);
@@ -29,8 +29,8 @@ scan with {: return lexer.next_token(); :};
 
 /* Terminals (tokens returned by the scanner). */
 terminal            SEMI, PLUS, MINUS, TIMES, DIV, MENOR, MAYOR, IGUAL,UMINUS,
-					LPAREN, RPAREN, DPTOS, LCORCH, RCORCH, COMA, AND, OR, NOT,
-                    DENTERO, DREAL, DCARACTER, DBOOLEAN, 
+					LPAREN, RPAREN, DPTOS, LCORCH, RCORCH, COMA, PUNTO, 
+					AND, OR, NOT, DENTERO, DREAL, DCARACTER, DBOOLEAN, 
                     RETURN, FUNCION, MIENTRAS, FINMIENTRAS, STRUCT, SI, SINO, FINSI, ENTONCES ;
 terminal Double 	NUMBER;
 terminal Boolean    BOOLEAN;

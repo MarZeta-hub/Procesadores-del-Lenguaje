@@ -87,7 +87,7 @@ Lnot = "not" | "!"  				   //NOT logico
 /* Comentarios */
 Comment = {TraditionalComment} | {EndOfLineComment} 
 TraditionalComment = "<!--" {CommentContent} "-->" //Comentario de abierto y cerrado
-EndOfLineComment = "#" [^\r\n]* {Newline}          //Comentario de linea
+EndOfLineComment = "#" [^\r\n]*                   //Comentario de linea
 CommentContent = ( [-]* |[^-] | -[^-] | --+[^->])*            //Contenido de comentario
 
 %eofval{
@@ -116,6 +116,7 @@ CommentContent = ( [-]* |[^-] | -[^-] | --+[^->])*            //Contenido de com
   "{"           { return symbolFactory.newSymbol("LCORCH", LCORCH); }     
   "}"           { return symbolFactory.newSymbol("RCORCH", RCORCH); }
   ","           { return symbolFactory.newSymbol("COMA", COMA); }
+  "."           { return symbolFactory.newSymbol("PUNTO", PUNTO);}
   {Land}        { return symbolFactory.newSymbol("AND",AND); }
   {Lor }        { return symbolFactory.newSymbol("OR", OR); }
   {Lnot}        { return symbolFactory.newSymbol("NOT", NOT); }

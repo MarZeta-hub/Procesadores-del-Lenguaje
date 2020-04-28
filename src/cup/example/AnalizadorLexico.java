@@ -11,7 +11,7 @@ class AnalizadorLexico {
 	public static void main(String[] args) throws Exception {
 
 		ComplexSymbolFactory f = new ComplexSymbolFactory();
-		File file = new File("input.txt");
+		File file = new File("prueba/input2 .txt");
 		FileInputStream fis = null;
 		try {
 			fis = new FileInputStream(file);

@@ -1,5 +1,0 @@
-<!-- hola -->
-
-Buleano hola := TRUE;
-entero hola := 1;
-buleano he := 1 < 7;
