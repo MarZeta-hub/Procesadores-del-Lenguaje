@@ -16,7 +16,7 @@ parser code {:
 init with {:
   ComplexSymbolFactory f = new ComplexSymbolFactory();
   symbolFactory = f;
-  File file = new File("input3.txt");
+  File file = new File("grupo_T_pruebaOK.txt");
   FileInputStream fis = null;
   try {
     fis = new FileInputStream(file);
