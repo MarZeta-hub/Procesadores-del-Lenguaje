@@ -126,7 +126,7 @@ CommentContent = ( [-]* |[^-] | -[^-] | --+[^->])*            //Contenido de com
   "BULEANO"    { return symbolFactory.newSymbol("DBOOLEAN", DBOOLEAN);}
   "RETURN"      { return symbolFactory.newSymbol("RETURN", RETURN);}
   "FUNCION"     { return symbolFactory.newSymbol("FUNCION", FUNCION);}
-  "MIENTAS"     { return symbolFactory.newSymbol("MIENTRAS", MIENTRAS);}
+  "MIENTRAS"     { return symbolFactory.newSymbol("MIENTRAS", MIENTRAS);}
   "FINMIENTRAS" { return symbolFactory.newSymbol("FINMIENTRAS", FINMIENTRAS );}
   "ENTONCES"    { return symbolFactory.newSymbol("ENTONCES", ENTONCES );}
   "Struct"      { return symbolFactory.newSymbol("STRUCT", STRUCT );}

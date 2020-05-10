@@ -1,14 +1,25 @@
-<!--Declaracion de variablesy tipos STRUCT------------------------------------------------------------------------------------------------>
+# <!-- Declaracion de variablesy tipos STRUCT -->
+
  REAL re1;
- ENTERO en2 :=6; # con asignación de valor 
- BOOLEANO bo3 :=5<3; # se asigna el resultado de una expresión
- CARACTERca4:= 'h'; # variable de tipo carácter, y su literal
- STRUCT VECTOR2D {REAL x1; REAL x2};
+ ENTERO en2 :=6;                 # con asignación de valor 
+ BULEANO bo3 :=5<3;              # se asigna el resultado de una expresión
+ CARACTERca4:= 'h';              # variable de tipo carácter, y su literal
+ 
+ STRUCT VECTOR2D {
+ ENTERO x1; 
+ }
+ 
+ BULEANo ALO;
+ 
  STRUCT BOLA {
- VECTOR2Dcentro; 
- REAL radio
- }; 				#definición tipo compuesto
- BOLApunto1; # declaración variable struct (no permite asignación al # mismo tiempo que la declaracion)
+ VECTOR2D centro; 
+ ENTERO radio;
+ }
+ 
+ 
+ #definición tipo compuesto
+ BOLA punto1; # declaración variable struct (no permite asignación al # mismo tiempo que la declaracion)
+ 
  STRUCT PALABRA {
  CARACTER l1;
  CARACTER l2;
@@ -19,24 +30,29 @@
  CARACTER l7;
  CARACTER l8;
  CARACTER l9;
- CARACTER l10
- };
+ CARACTER l10;
+ }
+
  STRUCT PERSONA {
  PALABRA nombre; 
  PALABRA apellido1; 
  PALABRA apellido1;
- ENTERO edad
- }; 
+ ENTERO edad;
+ } 
+ 
+
  PERSONA alumno;
  ### Expresiones 
  5 + 6;                              # operacion 
  re1 := 3.7;                          # asignación simple 
- bo3 :=en2< 7 AND 5.46+7*en2 >4;     # asignación compleja 
+ #bo3 := en2 < 7 AND 5.46 + 7 * en2 > 4;     # asignación compleja 
  punto1.centro.x1 := 0.0;              # campo de variable 
- structanidadapunto1.centro.x2 := 0.0; # campo de variable 
- structanidadapunto1.radio := 10.0;   # campo de variable 
- structalumno.nombre.l1 := 'A';
- alumno.nombre.l2: 'l';
+ anidadapunto1.centro.x2 := 0.0; # campo de variable 
+ anidadapunto1.radio := 10.0;   # campo de variable 
+ 
+ 
+ alumno.nombre.l1 := 'A';
+ alumno.nombre.l2 := 'l';
  alumno.nombre.l3 := 'b';
  alumno.apellido2.l1 := 0;
  alumno.nombre.l4 := 'e';
@@ -50,24 +66,29 @@
  alumno.apellido1.l4 := 'c';
  alumno.apellido1.l5 := 'í';
  alumno.apellido1.l6 := 'a';
- alumno.apellido1.l7 := 0;
+ alumno.apellido1.l7 :=  0;
  alumno.apellido2.l1 := 'S';
  alumno.apellido2.l2 := 'a';
  alumno.apellido2.l3 := 'n';
  alumno.apellido2.l4 := 'z';
  alumno.apellido2.l5 := 0;
- alumno.edad:=19;
- 
+ alumno.edad:= 19;
+
  ### Sentencia de control de flujo bucle condicional 
- BOOLEANO seguir :=true;
- MIENTRAS seguir AND punto1.radio>0 # bucle condicional
-   SI punto1.centro.x1<0 AND punto1.centro.x2<0 # cuerpo si condición verdadera 
-     seguir:=false; 
+ BULEANO seguir := true;
+ 
+ MIENTRAS true AND punto1.radio > 0 # bucle condicional
+
+   SI punto1.centro.x1 < 0 AND punto1.centro.x2 #< 0 # cuerpo si condición verdadera 
+   ENTONCES
+     seguir := false; 
    SINO # cuerpo cuando la condición es falsa 
-     Seguir:=true;
-   FINSI # fin de condicional
+     Seguir := true;
+   FINSI # fin de condicional 
+
    punto1.radio := punto1.radio / 2.0;
    punto1.centro.x1 := punto1.centro.x1 - 1.0;
    punto1.centro.x2 := punto1.centro.x2 - 1.0;
-   
- FINMIENTRAS   # fin de bucle MIENTRAS
+ FINMIENTRAS   # fin de bucle
+
+ 
