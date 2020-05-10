@@ -1,6 +1,11 @@
 
+/**
+  * ANALIZADOR SINTACTICO DE UN LENGUAJE BSL
+  *
+  *
+  */
+  
 package cup.example;
-
 import java_cup.runtime.*;
 import cup.example.Lexer;
 import java.io.IOException;
