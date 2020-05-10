@@ -15,7 +15,7 @@ parser code {:
 init with {:
   ComplexSymbolFactory f = new ComplexSymbolFactory();
   symbolFactory = f;
-  File file = new File("prueba/input3.txt");
+  File file = new File("prueba/grupo_T_pruebaOK.txt");
   FileInputStream fis = null;
   try {
     fis = new FileInputStream(file);
@@ -30,25 +30,25 @@ scan with {: return lexer.next_token(); :};
 terminal            SEMI, PLUS, MINUS, TIMES, DIV, MENOR, MAYOR, IGUAL,UMINUS,
 					LPAREN, RPAREN, DPTOS, LCORCH, RCORCH, COMA, PUNTO, 
 					AND, OR, NOT, DENTERO, DREAL, DCARACTER, DBOOLEAN, 
-                    RETURN, FUNCION, MIENTRAS, FINMIENTRAS, STRUCT, SI, SINO, FINSI, ENTONCES ;
+                    RETURN, FUNCION, MIENTRAS, FINMIENTRAS, STRUCT, SI, SINO, FINSI, ENTONCES,
+                    MENORIGUAL, MAYORIGUAL, IGUALIGUAL, NOTIGUAL;
 terminal Double 	NUMBER;
 terminal Boolean    BOOLEAN;
 terminal char       CHAR;
 terminal String     ID;
-terminal String     IDFUNCION;
 
 /* Non terminals */
 non terminal programa, blq_sentencias, sentencia, sent_decl, sent_uso, sent_flujo,
 			 asignacion, exp_list, condicional, keytipo, decl_variable, decl_struct,
 			 identificado, bucle, lista_struct, funcion, uso_funcion,  lexp, exp_list2,
-			 type_struct;
+			 type_struct, identificado_funcion;
 			 
 non terminal  dec_exp_n1, dec_exp_n2, dec_exp_n3, dec_exp_n4, dec_exp_n5;
 
 /* Precedencia */
 precedence nonassoc LPAREN;	// Inserted by Eclipse plugin
 precedence left NOT, AND, OR;
-precedence left MAYOR, MENOR /*,GE, LE, NOTIGUAL*/;
+precedence left MAYOR, MENOR, MAYORIGUAL, MENORIGUAL, IGUALIGUAL, NOTIGUAL ;
 precedence left PLUS, MINUS;
 precedence left TIMES, DIV;
 precedence left UMINUS;
@@ -95,9 +95,13 @@ decl_variable ::= keytipo ID DPTOS IGUAL dec_exp_n1
 				| keytipo identificado
 				;
 				
-identificado ::= identificado COMA ID 
-			   | ID 
-			   ;
+identificado ::= identificado COMA ID
+				| ID
+				;				
+				
+identificado_funcion ::= identificado_funcion COMA keytipo ID
+			   		   | keytipo ID
+			           ;
 				
 //Estructura de una dec_exp condicional
 condicional ::= SI dec_exp_n1 ENTONCES blq_sentencias FINSI
@@ -116,7 +120,7 @@ keytipo ::= DENTERO
 		  | ID
 		  ;
 		  
-funcion ::= FUNCION IDFUNCION LPAREN identificado RPAREN RETURN keytipo LCORCH blq_sentencias RCORCH
+funcion ::= FUNCION ID LPAREN identificado_funcion RPAREN RETURN keytipo LCORCH blq_sentencias RCORCH
 		  ;
 
 //Estructura de un Struct
@@ -134,6 +138,10 @@ lexp ::= lexp COMA dec_exp_n1
 
 dec_exp_n1 ::= dec_exp_n1 MENOR dec_exp_n1
 		     | dec_exp_n1 MAYOR dec_exp_n1
+		     | dec_exp_n1 MAYORIGUAL  dec_exp_n1
+		     | dec_exp_n1 MENORIGUAL dec_exp_n1
+		     | dec_exp_n1 IGUALIGUAL dec_exp_n1
+		     | dec_exp_n1 NOTIGUAL dec_exp_n1
 		     | dec_exp_n2
 		     ;
 

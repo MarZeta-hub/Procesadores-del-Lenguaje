@@ -9,7 +9,7 @@ package cup.example;
 public interface sym {
   /* terminals */
   public static final int DREAL = 22;
-  public static final int CHAR = 36;
+  public static final int CHAR = 40;
   public static final int UMINUS = 10;
   public static final int SI = 30;
   public static final int FUNCION = 26;
@@ -21,6 +21,7 @@ public interface sym {
   public static final int RPAREN = 12;
   public static final int RCORCH = 15;
   public static final int NOT = 20;
+  public static final int MENORIGUAL = 34;
   public static final int AND = 18;
   public static final int DCARACTER = 23;
   public static final int IGUAL = 9;
@@ -31,22 +32,24 @@ public interface sym {
   public static final int MIENTRAS = 27;
   public static final int DIV = 6;
   public static final int PLUS = 3;
-  public static final int ID = 37;
-  public static final int BOOLEAN = 35;
+  public static final int ID = 41;
+  public static final int MAYORIGUAL = 35;
+  public static final int BOOLEAN = 39;
   public static final int EOF = 0;
   public static final int RETURN = 25;
   public static final int error = 1;
   public static final int COMA = 16;
-  public static final int IDFUNCION = 38;
   public static final int MENOR = 7;
-  public static final int NUMBER = 34;
+  public static final int NUMBER = 38;
   public static final int MAYOR = 8;
   public static final int TIMES = 5;
   public static final int PUNTO = 17;
+  public static final int IGUALIGUAL = 36;
   public static final int DBOOLEAN = 24;
   public static final int DPTOS = 13;
   public static final int FINSI = 32;
   public static final int STRUCT = 29;
+  public static final int NOTIGUAL = 37;
   public static final String[] terminalNames = new String[] {
   "EOF",
   "error",
@@ -82,11 +85,14 @@ public interface sym {
   "SINO",
   "FINSI",
   "ENTONCES",
+  "MENORIGUAL",
+  "MAYORIGUAL",
+  "IGUALIGUAL",
+  "NOTIGUAL",
   "NUMBER",
   "BOOLEAN",
   "CHAR",
-  "ID",
-  "IDFUNCION"
+  "ID"
   };
 }
 

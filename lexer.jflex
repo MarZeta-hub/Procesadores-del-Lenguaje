@@ -109,6 +109,10 @@ CommentContent = ( [-]* |[^-] | -[^-] | --+[^->])*            //Contenido de com
   "<"           { return symbolFactory.newSymbol("MENOR", MENOR); }
   ">"           { return symbolFactory.newSymbol("MAYOR", MAYOR); }
   "="           { return symbolFactory.newSymbol("IGUAL", IGUAL); }
+  "<="          { return symbolFactory.newSymbol("MENORIGUAL", MENORIGUAL); }
+  ">="          { return symbolFactory.newSymbol("MAYORIGUAL", MAYORIGUAL); }
+  "=="          { return symbolFactory.newSymbol("IGUALIGUAL", IGUALIGUAL); }
+  "!="          { return symbolFactory.newSymbol("NOTIGUAL", NOTIGUAL);}
   "n"           { return symbolFactory.newSymbol("UMINUS", UMINUS); }
   "("           { return symbolFactory.newSymbol("LPAREN", LPAREN); }
   ")"           { return symbolFactory.newSymbol("RPAREN", RPAREN); }
