@@ -10,7 +10,7 @@ bo := 5 < 3;               # comparación, debe resultar true
 # si un número es positivo
 REAL num;
 BOOLEANO positivo;
-SI num >= 0 ENTONCES
+SI num > 0 ENTONCES
 		positivo:= TRUE;
 	SINO
 		positivo:= FALSE;
@@ -21,11 +21,11 @@ REAL a,b,c,max;
 a:=1;
 b:=2;
 c:=3;
-SI a>=b AND a>=c ENTONCES 
+SI a>b AND a>c ENTONCES 
 	#a es el máximo
 	max:=a; 
 SINO # el máximo es b o c 
-	SI b>=a AND b>=c ENTONCES # b es el máximoma
+	SI b>a AND b>c ENTONCES # b es el máximoma
 		max:=b; 
 	SINO # c es el máximo, por descartema
 		max:=c;

@@ -15,7 +15,7 @@ parser code {:
 init with {:
   ComplexSymbolFactory f = new ComplexSymbolFactory();
   symbolFactory = f;
-  File file = new File("prueba/input2.txt");
+  File file = new File("prueba/input3.txt");
   FileInputStream fis = null;
   try {
     fis = new FileInputStream(file);
@@ -35,18 +35,18 @@ terminal Double 	NUMBER;
 terminal Boolean    BOOLEAN;
 terminal char       CHAR;
 terminal String     ID;
+terminal String     IDFUNCION;
 
 /* Non terminals */
 non terminal programa, blq_sentencias, sentencia, sent_decl, sent_uso, sent_flujo,
 			 asignacion, exp_list, condicional, keytipo, decl_variable, decl_struct,
-			 identificado, bucle, lista_struct;
+			 identificado, bucle, lista_struct, funcion, uso_funcion,  lexp, exp_list2,
+			 type_struct;
 			 
-non terminal dec_exp_n1, dec_exp_n2, dec_exp_n3, dec_exp_n4, dec_exp_n5;
+non terminal  dec_exp_n1, dec_exp_n2, dec_exp_n3, dec_exp_n4, dec_exp_n5;
 
 /* Precedencia */
-precedence nonassoc ID;	// Inserted by Eclipse plugin
-precedence nonassoc SI;
-precedence nonassoc SINO;
+precedence nonassoc LPAREN;	// Inserted by Eclipse plugin
 precedence left NOT, AND, OR;
 precedence left MAYOR, MENOR /*,GE, LE, NOTIGUAL*/;
 precedence left PLUS, MINUS;
@@ -65,37 +65,40 @@ blq_sentencias ::= blq_sentencias sentencia
 				 | sentencia
 				 ;
 
-//Tipos sentencias: mediante declaracion de variables, asignacion, condicional, bloque de sentencias entre corchetes, usar una funcion, 
-//declarar un struct y declarar una funcion
 sentencia ::= sent_decl 
 			| sent_uso 
 			| sent_flujo 
 			;
 
-//Declarar una nueva variable
 sent_decl ::= decl_variable SEMI 
 			| decl_struct
 			;
 
-//Asignar un nuevo valora  una variable
 sent_uso ::= asignacion SEMI 
 		   | dec_exp_n1 SEMI
-
 		   ;
 
-//Flujo de condiciones o de bucles
 sent_flujo ::= condicional 
 			 | bucle
+			 | funcion
 			 ;
 
 //Estructura de una asignacion de valores
-asignacion ::=  ID DPTOS IGUAL dec_exp_n1
-			 | exp_list DPTOS IGUAL dec_exp_n1
+asignacion ::= type_struct DPTOS IGUAL dec_exp_n1
 			 ;
-
-exp_list ::= exp_list PUNTO ID | ID
-		   ;
-
+			 
+type_struct	::= ID
+			  | type_struct PUNTO ID
+			  ;	 
+			 
+decl_variable ::= keytipo ID DPTOS IGUAL dec_exp_n1 
+				| keytipo identificado
+				;
+				
+identificado ::= identificado COMA ID 
+			   | ID 
+			   ;
+				
 //Estructura de una dec_exp condicional
 condicional ::= SI dec_exp_n1 ENTONCES blq_sentencias FINSI
 			  | SI dec_exp_n1 ENTONCES blq_sentencias SINO blq_sentencias FINSI
@@ -105,30 +108,29 @@ condicional ::= SI dec_exp_n1 ENTONCES blq_sentencias FINSI
 bucle ::= MIENTRAS dec_exp_n1 blq_sentencias FINMIENTRAS 
 		;
 
-//Estructura de una declaracion de variables
-decl_variable ::= keytipo ID DPTOS IGUAL dec_exp_n1 
-				| keytipo identificado
-				;
-
-//Identificacion de un ID
-identificado ::= identificado COMA ID 
-			   | ID ;
-
 //Tipos diversos de operandos, como nuevos structs.
 keytipo ::= DENTERO 
 		  | DREAL 
 		  | DBOOLEAN 
 		  | DCARACTER
-		  | exp_list
+		  | ID
+		  ;
+		  
+funcion ::= FUNCION IDFUNCION LPAREN identificado RPAREN RETURN keytipo LCORCH blq_sentencias RCORCH
 		  ;
 
 //Estructura de un Struct
 decl_struct ::= STRUCT ID LCORCH lista_struct RCORCH 
 			  ;
+  
 
 lista_struct ::= decl_variable SEMI lista_struct
 			   | decl_variable SEMI
 			   ;
+
+lexp ::= lexp COMA dec_exp_n1
+	   | dec_exp_n1
+	   ;
 
 dec_exp_n1 ::= dec_exp_n1 MENOR dec_exp_n1
 		     | dec_exp_n1 MAYOR dec_exp_n1
@@ -150,16 +152,16 @@ dec_exp_n3 ::= dec_exp_n3 TIMES dec_exp_n3
 			 
 dec_exp_n4 ::= MINUS dec_exp_n5 
 	    	 | NOT dec_exp_n5
+	    	 | PLUS dec_exp_n5
              | dec_exp_n5
              ;
 
 dec_exp_n5 ::= NUMBER
-			 | LPAREN dec_exp_n1 RPAREN
+			 | LPAREN lexp RPAREN
 			 | UMINUS			 
 			 | BOOLEAN
 			 | CHAR
-	    	 | exp_list		 
+			 | type_struct
+			 | ID LPAREN lexp RPAREN
 			 ;
-
-
-		  
+		

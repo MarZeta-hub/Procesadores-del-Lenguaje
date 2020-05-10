@@ -37,6 +37,7 @@ public interface sym {
   public static final int RETURN = 25;
   public static final int error = 1;
   public static final int COMA = 16;
+  public static final int IDFUNCION = 38;
   public static final int MENOR = 7;
   public static final int NUMBER = 34;
   public static final int MAYOR = 8;
@@ -84,7 +85,8 @@ public interface sym {
   "NUMBER",
   "BOOLEAN",
   "CHAR",
-  "ID"
+  "ID",
+  "IDFUNCION"
   };
 }
 
