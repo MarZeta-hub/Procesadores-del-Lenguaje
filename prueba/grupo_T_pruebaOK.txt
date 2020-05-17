@@ -1,38 +1,3 @@
-  <!-- Definicion de funciones -->
-
-  FUNCION cuadrado( REAL a ) RETURN REAL {
-      a * a; 
-  }  ### Sobrecarga de funciones
-  FUNCION cuadrado( ENTERO e ) RETURN ENTERO{
-      e * e; 
-  }
-   ### Funcion de dos argumentos
-   FUNCION potencia( REAl a, ENTERO e ) RETURN REAL{
-     REAL r := 1;
-     ENTERO i := 1;
-     MIENTRAS i < e
-       R := r*a;
-       I := i + 1;
-     FINMIENTRAS
-   } 
-   ENTERO en2 := 6;                             # con asignación de valor 
-   
-   ### Expresiones 
-   5 + 6; # operacion 
-   re1 := 3.7;                                  # asignación simple 
-   re1 := 3.7 + cuadrado(re1);                  # usando llamada a función
-   re2 := potencia(re1, en2);
-   
-   ### Sentencia condicional de control de flujo 
-   SI en2 == 3 OR bo3 AND re1                   #condicion
-   ENTONCES                                     #cuerpo cuando la condición esverdadera 
-  	 en2 := en2 + 3; 
-   SINO                                         # cuerpo cuando la condición es falsa, llamada 
-   	recursivare1 := cuadrado( cuadrado (en2));
-   FINSI                                       #fin de la sentencia
-    
-    
-   <!--Declaracion de variablesy tipos STRUCT------------------------------------------------------------------------------------------------>
 
  REAL re1;
  ENTERO en2 :=6; # con asignación de valor 
@@ -110,9 +75,8 @@
    punto1.centro.x2 := punto1.centro.x2 - 1.0;
    
  FINMIENTRAS  
-   
-   <!-- Operaciones aritmeticas y comparacion------------------------------------------------------------------------------------------------>
 
+ 
 REAL re1, re2;
 BOOLEANO bo;
 CARACTER ca := 'h' ;        # variable de tipo carácter, y su literal
@@ -144,3 +108,38 @@ SINO # el máximo es b o c
 		max:=c;
 	FINSI 
 FINSI
+
+  <!-- Definicion de funciones -->
+
+  FUNCION cuadrado( REAL a ) RETURN REAL {
+      a * a; 
+  }  ### Sobrecarga de funciones
+  FUNCION cuadrado( ENTERO e ) RETURN ENTERO{
+      e * e; 
+  }
+   ### Funcion de dos argumentos
+   FUNCION potencia( REAl a, ENTERO e ) RETURN REAL{
+     REAL r := 1;
+     ENTERO i := 1;
+     MIENTRAS i < e
+       R := r*a;
+       I := i + 1;
+     FINMIENTRAS
+   } 
+   ENTERO en2 := 6;                             # con asignación de valor 
+   
+   ### Expresiones 
+   5 + 6; # operacion 
+   re1 := 3.7;                                  # asignación simple 
+   re1 := 3.7 + cuadrado(re1);                  # usando llamada a función
+   re2 := potencia(re1, en2);
+   
+   ### Sentencia condicional de control de flujo 
+   SI en2 == 3 OR bo3 AND re1                   #condicion
+   ENTONCES                                     #cuerpo cuando la condición esverdadera 
+  	 en2 := en2 + 3; 
+   SINO                                         # cuerpo cuando la condición es falsa, llamada 
+   	recursivare1 := cuadrado( cuadrado (en2));
+   FINSI                                       #fin de la sentencia
+    
+    

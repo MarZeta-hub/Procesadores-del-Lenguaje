@@ -1,4 +1,3 @@
-<!-- Operaciones aritmeticas y comparacion------------------------------------------------------------------------------------------------>
 
 REAL re1, re2;
 BOOLEANO bo;

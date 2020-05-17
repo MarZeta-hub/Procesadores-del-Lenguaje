@@ -20,7 +20,7 @@ parser code {:
 init with {:
   ComplexSymbolFactory f = new ComplexSymbolFactory();
   symbolFactory = f;
-  File file = new File("prueba/grupo_T_pruebaOK.txt");
+  File file = new File("prueba/vacio.txt");
   FileInputStream fis = null;
   try {
     fis = new FileInputStream(file);
@@ -44,9 +44,9 @@ terminal String     ID;
 
 /* Non terminals */
 non terminal programa, blq_sentencias, sentencia, sent_decl, sent_uso, sent_flujo,
-			 asignacion, exp_list, condicional, keytipo, decl_variable, decl_struct,
-			 identificado, bucle, lista_struct, decl_funcion, uso_funcion,  lexp, exp_list2,
-			 type_struct, identificado_funcion;
+			 asignacion, condicional, keytipo, decl_variable, decl_struct,
+			 identificado, bucle, lista_struct, decl_funcion, lexp,
+			 type_struct, identificado_funcion, declaradores;
 			 
 non terminal  Boolean dec_exp_n1, dec_exp_n2, dec_exp_n3, dec_exp_n4, dec_exp_n5;
 
@@ -117,9 +117,13 @@ decl_funcion ::= FUNCION ID LPAREN identificado_funcion RPAREN RETURN keytipo LC
 		  	   ;
 
 //PARAMETROS DE ENTRADA DE UNA FUNCION
-identificado_funcion ::= identificado_funcion COMA keytipo ID
-			   		   | keytipo ID
+identificado_funcion ::= declaradores
+			   		   |
 			           ;
+			           
+declaradores ::= declaradores COMA keytipo ID
+			   	| keytipo ID
+			   	;	           
 
 //CONDICIONAL : IF expresion ENTONCES bloque (ELSE bloque) FINSI
 condicional ::= SI dec_exp_n1 ENTONCES blq_sentencias FINSI

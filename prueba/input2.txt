@@ -1,4 +1,3 @@
-<!--Declaracion de variablesy tipos STRUCT------------------------------------------------------------------------------------------------>
 
  REAL re1;
  ENTERO en2 :=6; # con asignación de valor 
