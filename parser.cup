@@ -11,16 +11,75 @@ import cup.example.Lexer;
 import java.io.IOException;
 import java.io.File;
 import java.io.FileInputStream;
+import java.util.*;
+import data.DatosVar;
+import data.FuncionesAyuda;
+import data.TablaRegistro;
 
 parser code {:
   protected Lexer lexer;
+  ArrayList<DatosVar> symbolTable = new ArrayList<DatosVar>();
+  ArrayList<DatosVar> nuevasVariables = new ArrayList<DatosVar>();
+  ArrayList<TablaRegistro> registerTable = new ArrayList<TablaRegistro>();
+  ArrayList<String> listaID = new ArrayList<String>();
+
+	public void report_error(String message, Object info) {
+   
+        /* Crea un StringBuffer llamado 'm' con el string 'Error' en él. */
+
+        StringBuffer m = new StringBuffer("Error");
+   
+        /* Chequea si la información pasada al método es del mismo
+           tipo que el tipo java_cup.runtime.Symbol. */
+
+        if (info instanceof java_cup.runtime.Symbol) {
+
+            /* Declara un objeto 's' del tipo java_cup.runtime.Symbol con la
+               información que hay en el objeto info que está siendo convertido
+               como un objeto java_cup.runtime.Symbol. */
+            java_cup.runtime.Symbol s = ((java_cup.runtime.Symbol) info);
+   
+            /* Chequea si el número de línea en la entrada es mayor o
+               igual que cero. */
+            if (s.left >= 0) {                
+                /* Añade al final del mensaje de error StringBuffer
+                   el número de línea del error en la entrada. */
+                m.append(" en la linea "+(s.left+1));   
+                /* Chequea si el número de columna en la entrada es mayor
+                   o igual que cero. */
+                if (s.right >= 0)                    
+                    /* Añade al final del mensaje de error StringBuffer
+                       el número de columna del error en la entrada. */
+                    m.append(", columna "+(s.right+1));
+            }
+        }
+        /* Añade al final del mensaje de error StringBuffer creado en
+           este método el mensaje que fue pasado a este método. */
+        m.append(" : "+message);
+   
+        /* Imprime los contenidos del StringBuffer 'm', que contiene
+           el mensaje de error. */
+        System.err.println(m);
+    }
+    public void report_fatal_error(String message, Object info) {
+        report_error(message, info);
+        System.exit(1);
+    }
+
+    public void syntax_error(Symbol s){
+        System.out.println("Error recuperable de sintaxis: "+s.value+" Linea "+(s.left+1)+" columna "+(s.right+1) );
+    }
+
+    public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception{ 
+        System.out.println("Error no recuperable de sintaxis: "+s.value+" Linea "+(s.left+1)+" columna "+(s.right+1) );
+    }
 :}
 
 /* define how to connect to the scanner! */
 init with {:
   ComplexSymbolFactory f = new ComplexSymbolFactory();
   symbolFactory = f;
-  File file = new File("prueba/vacio.txt");
+  File file = new File("prueba/input2.txt");
   FileInputStream fis = null;
   try {
     fis = new FileInputStream(file);
@@ -37,18 +96,18 @@ terminal            SEMI, PLUS, MINUS, TIMES, DIV, MENOR, MAYOR, IGUAL,UMINUS,
 					AND, OR, NOT, DENTERO, DREAL, DCARACTER, DBOOLEAN, 
                     RETURN, FUNCION, MIENTRAS, FINMIENTRAS, STRUCT, SI, SINO, FINSI, ENTONCES,
                     MENORIGUAL, MAYORIGUAL, IGUALIGUAL, NOTIGUAL;
-terminal Double 	NUMBER;
+terminal Float 	NUMBER;
 terminal Boolean    BOOLEAN;
 terminal char       CHAR;
 terminal String     ID;
 
 /* Non terminals */
 non terminal programa, blq_sentencias, sentencia, sent_decl, sent_uso, sent_flujo,
-			 asignacion, condicional, keytipo, decl_variable, decl_struct,
-			 identificado, bucle, lista_struct, decl_funcion, lexp,
-			 type_struct, identificado_funcion, declaradores;
-			 
-non terminal  Boolean dec_exp_n1, dec_exp_n2, dec_exp_n3, dec_exp_n4, dec_exp_n5;
+			 asignacion, condicional, decl_struct,decl_variable,
+			 bucle, lista_struct, decl_funcion, lexp,
+			  identificado_funcion, declaradores,identificado;
+non terminal String keytipo, type_struct;
+non terminal Object dec_exp_n1, dec_exp_n2, dec_exp_n3, dec_exp_n4, dec_exp_n5;
 
 /* Precedencia */
 precedence nonassoc LPAREN;	// Inserted by Eclipse plugin
@@ -61,7 +120,11 @@ precedence left UMINUS;
 /* The grammar rules */
 
 //Inicio del análisis del texto
-programa ::= blq_sentencias 
+programa ::= blq_sentencias {: System.out.println("------------------Variables en la tabla de símbolos---------------");
+								for (DatosVar siguiente: symbolTable) System.out.println(siguiente.toString());
+							   System.out.println("\n ---------------Variables en la tabla de registros--------------");
+							   	for(TablaRegistro siguiente: registerTable){ System.out.println(siguiente.getNombreRegistro());
+							   		for(DatosVar siguiente1 : siguiente.registro) System.out.println(siguiente1.toString2()); }:}
 		   | /*lambda*/
 		   ;
  
@@ -77,9 +140,12 @@ sentencia ::= sent_decl //SENTENCIAS DE DECLARACION:
 			;
 
 //SENTENCIAS DE DECLARACION:
-sent_decl ::= decl_variable SEMI // KEYTIPO ID := valor; Ó KEYTIPO ID,...; 1 a N 
-			| decl_struct		 // STRUCT ID LCORCH lista_struct RCORCH
-			| decl_funcion		 //FUNCION 
+sent_decl ::= decl_variable SEMI  {:for(DatosVar siguiente: nuevasVariables){
+										symbolTable.add(siguiente);
+								   }nuevasVariables = new ArrayList<DatosVar>();
+								 	 :}// KEYTIPO ID := valor; Ó KEYTIPO ID,...; 1 a N 
+			| decl_struct		  // STRUCT ID LCORCH lista_struct RCORCH
+			| decl_funcion		  //FUNCION 
 			;
 
 //SENTENCIA DE FLUJO
@@ -89,57 +155,79 @@ sent_flujo ::= condicional       //IF expresion ENTONCES BLOQUE SENTENCIAS ELSE 
 			
 //SENTENCIAS DE INICIALIZACION
 sent_uso ::= asignacion SEMI     // ID := valor; Ó ID.ID... := valor
-		   | dec_exp_n1 SEMI	 // Una expresion tipo calculadora
+		   | dec_exp_n1:e SEMI	{:System.out.println(e.toString());:} // Una expresion tipo calculadora
 		   ;
 
 
 // KEYTIPO ID := valor; Ó KEYTIPO ID,...; 1 a N	 
-decl_variable ::= keytipo ID DPTOS IGUAL dec_exp_n1 
-				| keytipo identificado
+decl_variable ::= keytipo:e ID:id DPTOS IGUAL dec_exp_n1:valor {:   int index = FuncionesAyuda.buscarVariable(symbolTable, id);
+																	if (index != -1){ report_fatal_error("YA EXISTE LA VARIABLE <" + id + "> EN LA TABLA DE SÍMBOLOS", id); };
+																	DatosVar varNuevo = new DatosVar();
+																	if(e.equals("real")) varNuevo = new DatosVar(e,id, FuncionesAyuda.toReal(valor));
+																	else if (e.equals("entero")) varNuevo = new DatosVar(e,id, FuncionesAyuda.toInteger(valor));
+																	else if (e.equals("buleano")) varNuevo = new DatosVar(e,id, valor);
+																	else if (e.equals("caracter")) varNuevo = new DatosVar(e,id, valor);
+																	else report_fatal_error("EL TIPO DE VARIABLE INDICADO NO EXISTE O NO ES POSIBLE INICIALIZARLO: " + e, id);                     
+  																	nuevasVariables.add(varNuevo);
+																	if(varNuevo.getValor() == null) report_fatal_error("El valor pasado por parámetro <"+ valor+ "> de la variable <"+ id +"> no puede ser <"+ e +">", id);
+																:}
+				| keytipo:e identificado                 	   	{: for (DatosVar siguiente: nuevasVariables){
+																	if(siguiente.getTipo().equals("declarar")) siguiente.valorPorDefecto(e);
+																}:}
 				;
 
 // Desde ID hasta ID, ID, ID,... 1 a N
-identificado ::= identificado COMA ID
-				| ID
+identificado ::= identificado COMA ID:id                    	{: 	int index = FuncionesAyuda.buscarVariable(symbolTable, id);
+																	if (index != -1){ report_fatal_error("YA EXISTE LA VARIABLE <" + id + "> EN LA TABLA DE SÍMBOLOS", id); };
+																	nuevasVariables.add(new DatosVar("declarar",id, ""));
+																:}
+					| ID:id                        				{:	int index = FuncionesAyuda.buscarVariable(symbolTable, id);
+																	if (index != -1){ report_fatal_error("YA EXISTE LA VARIABLE <" + id + "> EN LA TABLA DE SÍMBOLOS", id); };
+																	nuevasVariables.add(new DatosVar("declarar",id, ""));
+																:}
 				;	
 				
 //Estructura de un Struct
-decl_struct ::= STRUCT ID LCORCH lista_struct RCORCH 
+decl_struct ::= STRUCT ID:id LCORCH lista_struct RCORCH 		{: registerTable.add(new TablaRegistro(id,nuevasVariables) );
+																   nuevasVariables = new ArrayList<DatosVar>();:}
 			  ;
   
 //CONTENIDO DE UN STRUCT
-lista_struct ::= decl_variable SEMI lista_struct
+lista_struct ::= decl_variable SEMI lista_struct    
 			   | decl_variable SEMI
 			   ;
 							
 //DECLARAR UNA FUNCION
-decl_funcion ::= FUNCION ID LPAREN identificado_funcion RPAREN RETURN keytipo LCORCH blq_sentencias RCORCH
+decl_funcion ::= FUNCION ID:id LPAREN identificado_funcion RPAREN RETURN keytipo:tipo LCORCH blq_sentencias RCORCH
+				 {:
+					 registerTable.add(new TablaRegistro(id,nuevasVariables));:}
 		  	   ;
 
 //PARAMETROS DE ENTRADA DE UNA FUNCION
-identificado_funcion ::= declaradores
+identificado_funcion ::= declaradores 
 			   		   |
 			           ;
 			           
-declaradores ::= declaradores COMA keytipo ID
-			   	| keytipo ID
+declaradores ::= declaradores COMA keytipo:tipo ID:id {: nuevasVariables.add(new DatosVar(tipo,id, ""));:}
+			   	| keytipo:tipo ID:id				  {: nuevasVariables.add(new DatosVar(tipo,id, ""));:}
 			   	;	           
 
 //CONDICIONAL : IF expresion ENTONCES bloque (ELSE bloque) FINSI
-condicional ::= SI dec_exp_n1 ENTONCES blq_sentencias FINSI
-			  | SI dec_exp_n1 ENTONCES blq_sentencias SINO blq_sentencias FINSI
+condicional ::= SI dec_exp_n1:e ENTONCES blq_sentencias:er FINSI                   {: if ((String.valueOf(e).equals("null")) || !(e.getClass().getSimpleName().equals("Boolean"))) System.out.println("No hay una condición"); :}
+			  | SI dec_exp_n1:e ENTONCES blq_sentencias SINO blq_sentencias FINSI  {: if ((String.valueOf(e).equals("null")) || !(e.getClass().getSimpleName().equals("Boolean"))) report_fatal_error("La expresión obtenido <" + e + "> no es valor condicional", e);:}
 			  ;
 
 //BUCLE: MIENTRAS expresion FINMIENTRAS
-bucle ::= MIENTRAS dec_exp_n1 blq_sentencias FINMIENTRAS 
+bucle ::= MIENTRAS dec_exp_n1:e blq_sentencias FINMIENTRAS   {: if ((String.valueOf(e).equals("null")) || !(e.getClass().getSimpleName().equals("Boolean")) ) report_fatal_error("La expresión obtenido <" + e + "> no es valor condicional", e);:}
 		;
 
 //DEFINIDORES DE VARIABLES
-keytipo ::= DENTERO 
-		  | DREAL 
-		  | DBOOLEAN 
-		  | DCARACTER
-		  | ID
+keytipo ::= DENTERO   {: RESULT = "entero";  :}
+		  | DREAL     {: RESULT = "real";    :}
+		  | DBOOLEAN  {: RESULT = "buleano"; :}
+		  | DCARACTER {: RESULT = "caracter";:}
+		  | ID:e	  {: if ( FuncionesAyuda.buscarRegistro(registerTable, e) == -1) report_fatal_error("No existe el struct <" + e + ">", e);
+						RESULT = e; :}
 		  ;
 			
 //USADO PARA LLAMAR FUNCIONES				
@@ -148,48 +236,79 @@ lexp ::= lexp COMA dec_exp_n1
 	   ;
 	   
 // ID := valor; Ó ID.ID... := valor
-asignacion ::= type_struct DPTOS IGUAL dec_exp_n1
+asignacion ::= type_struct:id DPTOS IGUAL dec_exp_n1:e {:String idPadre = listaID.get(0); listaID.remove(0); 
+														 int index = FuncionesAyuda.buscarVariable(symbolTable, idPadre);
+														 if(index == -1) report_fatal_error ("NO EXISTE LA VARIABLE <" + idPadre + "> EN LA TABLA DE SÍMBOLOS", id);
+														/* while(!listaID.isEmpty()){
+															int indexRegistro = FuncionesAyuda.buscarRegistro(registerTable, idPadre);
+															if(indexRegistro == -1) report_fatal_error ("NO EXISTE EL STRUCT <" + idPadre + "> EN EL REGISTRO", id);
+															String idHijo = listaID.get(0); listaID.remove(0); 
+															index = FuncionesAyuda.buscarVariable(registerTable.get(indexRegistro).registro, idHijo);
+															if(index == -1) report_fatal_error ("NO EXISTE LA VARIABLE <" + idPadre + "> EN LA TABLA DE SÍMBOLOS", id);
+															idPadre = idHijo;
+														 }*/
+														 /*IDS SOLAS*/
+														 String tipoActual = symbolTable.get(index).getTipo();
+														 if( tipoActual.equals("real") ){ symbolTable.get(index).setValor(FuncionesAyuda.toReal(e));}
+														 else if ( tipoActual.equals("entero") ) symbolTable.get(index).setValor(FuncionesAyuda.toInteger(e));
+														 else symbolTable.get(index).setValor(e);
+												 		:}
 			 ;
 			 
 //Desde ID hasta ID.ID.ID... de 1 a N
-type_struct	::= type_struct PUNTO ID
-			  | ID
+type_struct	::= type_struct PUNTO ID:id  {:listaID.add(id);:}
+			  | ID:id                    {:listaID.add(id);:}
 			  ;	
 		
 //EXPRESIONES LOGICOARITMETICAS
-dec_exp_n1 ::= dec_exp_n1 MENOR dec_exp_n1
-		     | dec_exp_n1 MAYOR dec_exp_n1
-		     | dec_exp_n1 MAYORIGUAL  dec_exp_n1
-		     | dec_exp_n1 MENORIGUAL dec_exp_n1
-		     | dec_exp_n1 IGUALIGUAL dec_exp_n1
-		     | dec_exp_n1 NOTIGUAL dec_exp_n1
-		     | dec_exp_n2
+dec_exp_n1 ::= dec_exp_n1:e1 MENOR dec_exp_n1:e2       {:RESULT =  ( Float.valueOf(String.valueOf(e1)) <  Float.valueOf(String.valueOf(e2)));:}
+		     | dec_exp_n1:e1 MAYOR dec_exp_n1:e2       {:RESULT =  ( Float.valueOf(String.valueOf(e1)) >  Float.valueOf(String.valueOf(e2)));:}
+		     | dec_exp_n1:e1 MAYORIGUAL  dec_exp_n1:e2 {:RESULT =  ( Float.valueOf(String.valueOf(e1)) >= Float.valueOf(String.valueOf(e2)));:}
+		     | dec_exp_n1:e1 MENORIGUAL dec_exp_n1:e2  {:RESULT =  ( Float.valueOf(String.valueOf(e1)) <= Float.valueOf(String.valueOf(e2)));:}
+		     | dec_exp_n1:e1 IGUALIGUAL dec_exp_n1:e2  {:RESULT =  e1.equals(e2);  :}
+		     | dec_exp_n1:e1 NOTIGUAL dec_exp_n1:e2    {:RESULT = !( e1.equals(e2));:}
+		     | dec_exp_n2:e                            {:RESULT = e;:}
 		     ;
 
-dec_exp_n2 ::= dec_exp_n2 PLUS dec_exp_n2
-			 | dec_exp_n2 MINUS dec_exp_n2
-			 | dec_exp_n2 OR dec_exp_n2
-			 | dec_exp_n2 AND dec_exp_n2
-			 | dec_exp_n3
+dec_exp_n2 ::= dec_exp_n2:e1 PLUS dec_exp_n2:e2        {: RESULT = FuncionesAyuda.toReal(e1) + FuncionesAyuda.toReal(e2);:}
+			 | dec_exp_n2:e1 MINUS dec_exp_n2:e2       {: RESULT = FuncionesAyuda.toReal(e1) - FuncionesAyuda.toReal(e2);:}
+			 | dec_exp_n2:e1 OR dec_exp_n2:e2          {: if (!String.valueOf(e1).equals("null" ) && !String.valueOf(e2).equals("null")) 
+																RESULT = (((boolean)e1) || ((boolean)e2)); :}
+			 | dec_exp_n2:e1 AND dec_exp_n2:e2         {: if (!String.valueOf(e1).equals("null" ) && !String.valueOf(e2).equals("null")) 
+																RESULT = (((boolean)e1) && ((boolean)e2)); :}
+			 | dec_exp_n3:e                            {: RESULT = e;:}
 			 ;
 			 
-dec_exp_n3 ::= dec_exp_n3 TIMES dec_exp_n3
-			 | dec_exp_n3 DIV dec_exp_n3
-			 | dec_exp_n4
+dec_exp_n3 ::= dec_exp_n3:e1 TIMES dec_exp_n3:e2       {: RESULT = FuncionesAyuda.toReal(e1) * FuncionesAyuda.toReal(e2);:}
+			 | dec_exp_n3:e1 DIV dec_exp_n3:e2         {: RESULT = FuncionesAyuda.toReal(e1) / FuncionesAyuda.toReal(e2);:}
+			 | dec_exp_n4:e                            {: RESULT = e;:}
 			 ;
 			 
-dec_exp_n4 ::= MINUS dec_exp_n5 
-	    	 | NOT dec_exp_n5
-	    	 | PLUS dec_exp_n5
-             | dec_exp_n5
+dec_exp_n4 ::= MINUS dec_exp_n5:e                      {: RESULT = -FuncionesAyuda.toReal(e); :}
+	    	 | NOT dec_exp_n5:e						   {: RESULT = !(boolean)e; :}
+	    	 | PLUS dec_exp_n5:e					   {: RESULT = e;:}
+             | dec_exp_n5:e							   {: RESULT = e;:}
              ;
 
-dec_exp_n5 ::= NUMBER
-			 | LPAREN dec_exp_n1 RPAREN
-			 | UMINUS			 
-			 | BOOLEAN
-			 | CHAR
-			 | type_struct
+dec_exp_n5 ::= NUMBER:e                                {:RESULT = e; :}
+			 | LPAREN dec_exp_n1:e RPAREN              {:RESULT = e; :} 
+			 | UMINUS:e                                {:RESULT = e; :}			 
+			 | BOOLEAN:e  							   {:RESULT = e; :}
+			 | CHAR:e								   {:RESULT = e; :}
+			 | type_struct:id 						   {:String idPadre = listaID.get(0);listaID.remove(0);
+														 int index = FuncionesAyuda.buscarVariable(symbolTable, idPadre);
+														 if(index == -1) report_fatal_error ("NO EXISTE LA VARIABLE <" + idPadre + "> EN LA TABLA DE SÍMBOLOS", id);
+													   /*while(!listaID.isEmpty()){
+															int indexRegistro = FuncionesAyuda.buscarRegistro(registerTable, idPadre);
+															if(indexRegistro == -1) report_fatal_error ("NO EXISTE EL STRUCT <" + idPadre + "> EN EL REGISTRO", id);
+															String idHijo = listaID.get(0); listaID.remove(0); 
+															index = FuncionesAyuda.buscarVariable(registerTable.get(indexRegistro).registro, idHijo);
+															if(index == -1) report_fatal_error ("NO EXISTE LA VARIABLE <" + idPadre + "> EN LA TABLA DE SÍMBOLOS", id);
+															idPadre = idHijo;
+														 }*/
+														 if (index == -1) report_fatal_error ("NO EXISTE LA VARIABLE <" + idPadre + "> EN LA TABLA DE SÍMBOLOS", id);
+														 RESULT = symbolTable.get(index).getValor() ;  
+													   :}
 			 | ID LPAREN lexp RPAREN
 			 ;
 		

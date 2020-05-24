@@ -852,34 +852,34 @@ public class Lexer implements sym, java_cup.runtime.Scanner {
         case 62: 
           {  return symbolFactory.newSymbol("IGUALIGUAL", IGUALIGUAL);  }
         case 155: break;
+        case 67: 
+          {  return symbolFactory.newSymbol("NUMBER", NUMBER, (Double) Integer.parseInt(yytext().substring(2), 16));  }
+        case 156: break;
         case 29: 
           {  return symbolFactory.newSymbol("DIV", DIV);  }
-        case 156: break;
+        case 157: break;
         case 23: 
         case 80: 
           {  return symbolFactory.newSymbol("NOT", NOT);  }
-        case 157: break;
+        case 158: break;
         case 20: 
         case 76: 
           {  return symbolFactory.newSymbol("AND",AND);  }
-        case 158: break;
+        case 159: break;
         case 129: 
           {  return symbolFactory.newSymbol("MIENTRAS", MIENTRAS); }
-        case 159: break;
+        case 160: break;
         case 126: 
           {  return symbolFactory.newSymbol("ENTONCES", ENTONCES ); }
-        case 160: break;
+        case 161: break;
         case 119: 
           {  return symbolFactory.newSymbol("DBOOLEAN", DBOOLEAN); }
-        case 161: break;
+        case 162: break;
         case 58: 
           {  return symbolFactory.newSymbol("NOTIGUAL", NOTIGUAL); }
-        case 162: break;
+        case 163: break;
         case 132: 
           {  return symbolFactory.newSymbol("FINMIENTRAS", FINMIENTRAS ); }
-        case 163: break;
-        case 67: 
-          {  return symbolFactory.newSymbol("NUMBER", NUMBER, (float) Integer.parseInt(yytext().substring(2), 16));  }
         case 164: break;
         case 27: 
           {  return symbolFactory.newSymbol("SEMI", SEMI);  }

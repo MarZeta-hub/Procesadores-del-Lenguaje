@@ -137,12 +137,12 @@ CommentContent = ( [-]* |[^-] | -[^-] | --+[^->])*            //Contenido de com
   "SI"          { return symbolFactory.newSymbol("SI", SI );}
   "SINO"        { return symbolFactory.newSymbol("SINO", SINO );}
   "FINSI"       { return symbolFactory.newSymbol("FINSI", FINSI );}
-  {Int}         { return symbolFactory.newSymbol("NUMBER", NUMBER, Double.parseDouble(yytext()));}
-  {Real}        { return symbolFactory.newSymbol("NUMBER", NUMBER, Double.parseDouble(yytext()));}
-  {Hexadecimal} { return symbolFactory.newSymbol("NUMBER", NUMBER, (double) Integer.parseInt(yytext().substring(2), 16)); }
+  {Int}         { return symbolFactory.newSymbol("NUMBER", NUMBER, Float.parseFloat(yytext()));}
+  {Real}        { return symbolFactory.newSymbol("NUMBER", NUMBER, Float.parseFloat(yytext()));}
+  {Hexadecimal} { return symbolFactory.newSymbol("NUMBER", NUMBER, (float) Integer.parseInt(yytext().substring(2), 16)); }
   {Boolean}     { return symbolFactory.newSymbol("BOOLEAN", BOOLEAN, Boolean.parseBoolean(yytext()));}
   {Char}        { return symbolFactory.newSymbol("CHAR", CHAR, yytext().charAt(1) );}
-  {id}          { return symbolFactory.newSymbol("ID", ID);}
+  {id}          { return symbolFactory.newSymbol("ID", ID, yytext());}
   {Comment}     { }    /* IGNORAMOS LOS COMENTARIOS */
 }
 
