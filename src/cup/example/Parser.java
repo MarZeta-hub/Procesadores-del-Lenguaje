@@ -534,8 +534,7 @@ public class Parser extends java_cup.runtime.lr_parser {
   ArrayList<DatosVar> symbolTable = new ArrayList<DatosVar>();
   ArrayList<DatosVar> nuevasVariables = new ArrayList<DatosVar>();
   ArrayList<TablaRegistro> registerTable = new ArrayList<TablaRegistro>();
-  ArrayList<String> listaID = new ArrayList<String>();
-
+  
 	public void report_error(String message, Object info) {
    
         /* Crea un StringBuffer llamado 'm' con el string 'Error' en él. */
@@ -760,7 +759,7 @@ for(DatosVar siguiente: nuevasVariables){
 		Location exright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).xright;
 		Object e = (Object)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-1)).value;
 		//@@CUPDBG5
-System.out.println(e.toString());
+System.out.println("Calculadora " + e.toString());
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("sent_uso",4, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -786,7 +785,7 @@ System.out.println(e.toString());
 																	else if (e.equals("entero")) varNuevo = new DatosVar(e,id, FuncionesAyuda.toInteger(valor));
 																	else if (e.equals("buleano")) varNuevo = new DatosVar(e,id, valor);
 																	else if (e.equals("caracter")) varNuevo = new DatosVar(e,id, valor);
-																	else report_fatal_error("EL TIPO DE VARIABLE INDICADO NO EXISTE O NO ES POSIBLE INICIALIZARLO: " + e, id);                     
+																	else report_fatal_error("EL TIPO DE VARIABLE INDICADO NO EXISTE O NO ES POSIBLE INICIALIZARLO: <" +e+">", id);                     
   																	nuevasVariables.add(varNuevo);
 																	if(varNuevo.getValor() == null) report_fatal_error("El valor pasado por parámetro <"+ valor+ "> de la variable <"+ id +"> no puede ser <"+ e +">", id);
 																
@@ -802,8 +801,8 @@ System.out.println(e.toString());
 		Location exright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).xright;
 		String e = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-1)).value;
 		//@@CUPDBG7
- for (DatosVar siguiente: nuevasVariables){
-																	if(siguiente.getTipo().equals("declarar")) siguiente.valorPorDefecto(e);
+for (DatosVar siguiente: nuevasVariables){
+																		if(siguiente.getTipo().equals("declarar")) if(siguiente.valorPorDefecto(e,registerTable)) report_fatal_error("EL TIPO DE VARIABLE INDICADO NO EXISTE <" + e +">", e);;
 																}
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("decl_variable",9, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
@@ -1065,22 +1064,9 @@ System.out.println(e.toString());
 		Location exright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xright;
 		Object e = (Object)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		//@@CUPDBG22
-String idPadre = listaID.get(0); listaID.remove(0); 
-														 int index = FuncionesAyuda.buscarVariable(symbolTable, idPadre);
-														 if(index == -1) report_fatal_error ("NO EXISTE LA VARIABLE <" + idPadre + "> EN LA TABLA DE SÍMBOLOS", id);
-														/* while(!listaID.isEmpty()){
-															int indexRegistro = FuncionesAyuda.buscarRegistro(registerTable, idPadre);
-															if(indexRegistro == -1) report_fatal_error ("NO EXISTE EL STRUCT <" + idPadre + "> EN EL REGISTRO", id);
-															String idHijo = listaID.get(0); listaID.remove(0); 
-															index = FuncionesAyuda.buscarVariable(registerTable.get(indexRegistro).registro, idHijo);
-															if(index == -1) report_fatal_error ("NO EXISTE LA VARIABLE <" + idPadre + "> EN LA TABLA DE SÍMBOLOS", id);
-															idPadre = idHijo;
-														 }*/
-														 /*IDS SOLAS*/
-														 String tipoActual = symbolTable.get(index).getTipo();
-														 if( tipoActual.equals("real") ){ symbolTable.get(index).setValor(FuncionesAyuda.toReal(e));}
-														 else if ( tipoActual.equals("entero") ) symbolTable.get(index).setValor(FuncionesAyuda.toInteger(e));
-														 else symbolTable.get(index).setValor(e);
+ DatosVar objetivo = FuncionesAyuda.obtenerValor(id, symbolTable);
+														 if(objetivo == null) report_fatal_error("No existe el struct <"+id+">", id);
+														 objetivo.setValor(e);
 												 		
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("asignacion",6, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-3)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
@@ -1090,11 +1076,14 @@ String idPadre = listaID.get(0); listaID.remove(0);
           case 38: // type_struct ::= type_struct PUNTO ID 
             {
               String RESULT =null;
+		Location exleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)).xleft;
+		Location exright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)).xright;
+		String e = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-2)).value;
 		Location idxleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xleft;
 		Location idxright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xright;
 		String id = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		//@@CUPDBG23
-listaID.add(id);
+RESULT = e + "-"+ id;
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("type_struct",18, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -1107,7 +1096,7 @@ listaID.add(id);
 		Location idxright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xright;
 		String id = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		//@@CUPDBG24
-listaID.add(id);
+RESULT = id;
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("type_struct",18, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -1470,11 +1459,10 @@ RESULT = e;
 		Location idxright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xright;
 		String id = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		//@@CUPDBG49
-int index = FuncionesAyuda.buscarVariable(symbolTable, listaID.get(0));
-														 listaID.remove(0);
-														 String elId = symbolTable.get(index).getId();
-														 if (index == -1) report_fatal_error ("NO EXISTE LA VARIABLE <" + elId + "> EN LA TABLA DE SÍMBOLOS", id);
-														 RESULT = symbolTable.get(index).getValor() ;  
+ 
+														DatosVar objetivo = FuncionesAyuda.obtenerValor(id, symbolTable);
+														 if(objetivo == null) report_fatal_error("No existe el struct <"+id+">", id);
+														 RESULT = objetivo.getValor() ;  
 													   
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("dec_exp_n5",23, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }

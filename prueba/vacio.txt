@@ -1,4 +1,6 @@
-REAL HOLA, JOSEALFREDO, MANUEL, LUGAR;
-BULEANO JOSELUSI, PAO, GER;
-CARACTER G, F, S;
-ENTERO JOSE;
+struct bola {
+real radio;
+}
+
+bola futbol;
+futbol.radio := 23;

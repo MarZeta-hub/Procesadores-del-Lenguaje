@@ -21,8 +21,7 @@ parser code {:
   ArrayList<DatosVar> symbolTable = new ArrayList<DatosVar>();
   ArrayList<DatosVar> nuevasVariables = new ArrayList<DatosVar>();
   ArrayList<TablaRegistro> registerTable = new ArrayList<TablaRegistro>();
-  ArrayList<String> listaID = new ArrayList<String>();
-
+  
 	public void report_error(String message, Object info) {
    
         /* Crea un StringBuffer llamado 'm' con el string 'Error' en él. */
@@ -106,7 +105,8 @@ non terminal programa, blq_sentencias, sentencia, sent_decl, sent_uso, sent_fluj
 			 asignacion, condicional, decl_struct,decl_variable,
 			 bucle, lista_struct, decl_funcion, lexp,
 			  identificado_funcion, declaradores,identificado;
-non terminal String keytipo, type_struct;
+non terminal String keytipo;
+non terminal String type_struct;
 non terminal Object dec_exp_n1, dec_exp_n2, dec_exp_n3, dec_exp_n4, dec_exp_n5;
 
 /* Precedencia */
@@ -155,7 +155,7 @@ sent_flujo ::= condicional       //IF expresion ENTONCES BLOQUE SENTENCIAS ELSE 
 			
 //SENTENCIAS DE INICIALIZACION
 sent_uso ::= asignacion SEMI     // ID := valor; Ó ID.ID... := valor
-		   | dec_exp_n1:e SEMI	{:System.out.println(e.toString());:} // Una expresion tipo calculadora
+		   | dec_exp_n1:e SEMI	{:System.out.println("Calculadora " + e.toString());:} // Una expresion tipo calculadora
 		   ;
 
 
@@ -167,12 +167,12 @@ decl_variable ::= keytipo:e ID:id DPTOS IGUAL dec_exp_n1:valor {:   int index = 
 																	else if (e.equals("entero")) varNuevo = new DatosVar(e,id, FuncionesAyuda.toInteger(valor));
 																	else if (e.equals("buleano")) varNuevo = new DatosVar(e,id, valor);
 																	else if (e.equals("caracter")) varNuevo = new DatosVar(e,id, valor);
-																	else report_fatal_error("EL TIPO DE VARIABLE INDICADO NO EXISTE O NO ES POSIBLE INICIALIZARLO: " + e, id);                     
+																	else report_fatal_error("EL TIPO DE VARIABLE INDICADO NO EXISTE O NO ES POSIBLE INICIALIZARLO: <" +e+">", id);                     
   																	nuevasVariables.add(varNuevo);
 																	if(varNuevo.getValor() == null) report_fatal_error("El valor pasado por parámetro <"+ valor+ "> de la variable <"+ id +"> no puede ser <"+ e +">", id);
 																:}
-				| keytipo:e identificado                 	   	{: for (DatosVar siguiente: nuevasVariables){
-																	if(siguiente.getTipo().equals("declarar")) siguiente.valorPorDefecto(e);
+				| keytipo:e identificado                 	   	{:for (DatosVar siguiente: nuevasVariables){
+																		if(siguiente.getTipo().equals("declarar")) if(siguiente.valorPorDefecto(e,registerTable)) report_fatal_error("EL TIPO DE VARIABLE INDICADO NO EXISTE <" + e +">", e);;
 																}:}
 				;
 
@@ -236,28 +236,15 @@ lexp ::= lexp COMA dec_exp_n1
 	   ;
 	   
 // ID := valor; Ó ID.ID... := valor
-asignacion ::= type_struct:id DPTOS IGUAL dec_exp_n1:e {:String idPadre = listaID.get(0); listaID.remove(0); 
-														 int index = FuncionesAyuda.buscarVariable(symbolTable, idPadre);
-														 if(index == -1) report_fatal_error ("NO EXISTE LA VARIABLE <" + idPadre + "> EN LA TABLA DE SÍMBOLOS", id);
-														/* while(!listaID.isEmpty()){
-															int indexRegistro = FuncionesAyuda.buscarRegistro(registerTable, idPadre);
-															if(indexRegistro == -1) report_fatal_error ("NO EXISTE EL STRUCT <" + idPadre + "> EN EL REGISTRO", id);
-															String idHijo = listaID.get(0); listaID.remove(0); 
-															index = FuncionesAyuda.buscarVariable(registerTable.get(indexRegistro).registro, idHijo);
-															if(index == -1) report_fatal_error ("NO EXISTE LA VARIABLE <" + idPadre + "> EN LA TABLA DE SÍMBOLOS", id);
-															idPadre = idHijo;
-														 }*/
-														 /*IDS SOLAS*/
-														 String tipoActual = symbolTable.get(index).getTipo();
-														 if( tipoActual.equals("real") ){ symbolTable.get(index).setValor(FuncionesAyuda.toReal(e));}
-														 else if ( tipoActual.equals("entero") ) symbolTable.get(index).setValor(FuncionesAyuda.toInteger(e));
-														 else symbolTable.get(index).setValor(e);
+asignacion ::= type_struct:id DPTOS IGUAL dec_exp_n1:e {: DatosVar objetivo = FuncionesAyuda.obtenerValor(id, symbolTable);
+														 if(objetivo == null) report_fatal_error("No existe el struct <"+id+">", id);
+														 objetivo.setValor(e);
 												 		:}
 			 ;
 			 
 //Desde ID hasta ID.ID.ID... de 1 a N
-type_struct	::= type_struct PUNTO ID:id  {:listaID.add(id);:}
-			  | ID:id                    {:listaID.add(id);:}
+type_struct	::= type_struct:e PUNTO ID:id  {:RESULT = e + "-"+ id;:}
+			  | ID:id                    {:RESULT = id;:}
 			  ;	
 		
 //EXPRESIONES LOGICOARITMETICAS
@@ -295,19 +282,10 @@ dec_exp_n5 ::= NUMBER:e                                {:RESULT = e; :}
 			 | UMINUS:e                                {:RESULT = e; :}			 
 			 | BOOLEAN:e  							   {:RESULT = e; :}
 			 | CHAR:e								   {:RESULT = e; :}
-			 | type_struct:id 						   {:String idPadre = listaID.get(0);listaID.remove(0);
-														 int index = FuncionesAyuda.buscarVariable(symbolTable, idPadre);
-														 if(index == -1) report_fatal_error ("NO EXISTE LA VARIABLE <" + idPadre + "> EN LA TABLA DE SÍMBOLOS", id);
-													   /*while(!listaID.isEmpty()){
-															int indexRegistro = FuncionesAyuda.buscarRegistro(registerTable, idPadre);
-															if(indexRegistro == -1) report_fatal_error ("NO EXISTE EL STRUCT <" + idPadre + "> EN EL REGISTRO", id);
-															String idHijo = listaID.get(0); listaID.remove(0); 
-															index = FuncionesAyuda.buscarVariable(registerTable.get(indexRegistro).registro, idHijo);
-															if(index == -1) report_fatal_error ("NO EXISTE LA VARIABLE <" + idPadre + "> EN LA TABLA DE SÍMBOLOS", id);
-															idPadre = idHijo;
-														 }*/
-														 if (index == -1) report_fatal_error ("NO EXISTE LA VARIABLE <" + idPadre + "> EN LA TABLA DE SÍMBOLOS", id);
-														 RESULT = symbolTable.get(index).getValor() ;  
+			 | type_struct:id 						   {: 
+														DatosVar objetivo = FuncionesAyuda.obtenerValor(id, symbolTable);
+														 if(objetivo == null) report_fatal_error("No existe el struct <"+id+">", id);
+														 RESULT = objetivo.getValor() ;  
 													   :}
 			 | ID LPAREN lexp RPAREN
 			 ;

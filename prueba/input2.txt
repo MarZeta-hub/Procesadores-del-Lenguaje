@@ -3,14 +3,15 @@
  ENTERO en2 := 6 ; # con asignación de valor 
  BULEANO bo3 := 5 < 3; # se asigna el resultado de una expresión
  CARACTER ca4:= 'h'; # variable de tipo carácter, y su literal
-re1 := 90;
+ re1 := en2;
 
- STRUCT VECTOR2D {REAL x1; REAL x2;}
+ STRUCT VECTOR2D {
+ REAL x1; 
+ REAL x2;
+ }
  
- STRUCT BOLA {VECTOR2D centro; REAL radio; }#definición tipo compuesto
+ STRUCT BOLA {VECTOR2D centro; REAL radio; } #definición tipo compuesto
  
- BOLA punto1; # declaración variable struct (no permite asignación al # mismo tiempo que la declaracion)
-
  STRUCT PALABRA {
  CARACTER l1;
  CARACTER l2;
@@ -23,23 +24,32 @@ re1 := 90;
  CARACTER l9;
  CARACTER l10;
  }
+ 
  STRUCT PERSONA {
  PALABRA nombre; 
  PALABRA apellido1; 
- PALABRA apellido1;
+ PALABRA apellido2;
  ENTERO edad;
  }
  
- <!--
+ BOLA punto1; # declaración variable struct (no permite asignación al # mismo tiempo que la declaracion)
+
  PERSONA alumno;
+ 
+ 
+ 
+ 
+ 
  ### Expresiones 
  5 + 6;                              # operacion 
  re1 := 3;                          # asignación simple 
  #bo3 := en2 < 7 AND 5.46 + 7 * en2 >4;     # asignación compleja 
- punto1.centro.x1 := 0.0;              # campo de variable 
- structanidadapunto1.centro.x2 := 0.0; # campo de variable 
- structanidadapunto1.radio := 10.0;   # campo de variable 
- structalumno.nombre.l1 := 'A';
+ punto1.centro.x1 := 3.0;              # campo de variable 
+punto1.centro.x2 := 7.0; # campo de variable 
+punto1.radio := 10.0;   # campo de variable 
+
+
+ alumno.nombre.l1 := 'A';
  alumno.nombre.l2 := 'l';
  alumno.nombre.l3 := 'b';
  alumno.apellido2.l1 := 0;
@@ -65,12 +75,12 @@ re1 := 90;
  ### Sentencia de control de flujo bucle condicional 
  BULEANO seguir :=true; 
 
- MIENTRAS seguir AND punto1.radio > 0 # bucle condicional
-   SI punto1.centro.x1 < 0 AND punto1.centro.x2 < 0 # cuerpo si condición verdadera 
+ MIENTRAS seguir AND (punto1.radio > 0) # bucle condicional
+   SI (punto1.centro.x1 < 0) AND (punto1.centro.x2 < 0) # cuerpo si condición verdadera 
      ENTONCES
      seguir := false; 
    SINO # cuerpo cuando la condición es falsa 
-     Seguir := true;
+     seguir := true;
    FINSI # fin de condicional 
    
    punto1.radio := punto1.radio / 2.0;
@@ -78,4 +88,3 @@ re1 := 90;
    punto1.centro.x2 := punto1.centro.x2 - 1.0;
    
  FINMIENTRAS  
--->

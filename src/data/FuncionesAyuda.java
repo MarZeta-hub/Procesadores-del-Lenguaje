@@ -60,4 +60,25 @@ public class FuncionesAyuda {
 		return resultado;
 	}
 	
+	public static DatosVar obtenerValor(String id, ArrayList<DatosVar> symbolTable) {
+		String[] arrayID =  id.split("-");
+		ArrayList<String> listaID = new ArrayList<String>();
+		for(int i =0; i<arrayID.length; i++) {
+			listaID.add(arrayID[i]);
+		}
+		String idPadre = listaID.get(0); listaID.remove(0);
+		 int index = FuncionesAyuda.buscarVariable(symbolTable, idPadre);
+		 if(index == -1) return null;
+		 ArrayList<DatosVar> obtenerVar = symbolTable.get(index).estructura;
+		 DatosVar objetivo = symbolTable.get(index);
+		while(!listaID.isEmpty()){ 
+			String idHijo = listaID.get(0); listaID.remove(0);
+			index = FuncionesAyuda.buscarVariable(obtenerVar,idHijo);
+			if(index == -1) return null;
+			objetivo = obtenerVar.get(index);
+			obtenerVar = obtenerVar.get(index).estructura;
+		}
+		 return objetivo;
+	}
+	
 }
