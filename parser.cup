@@ -166,23 +166,24 @@ decl_variable ::= keytipo:e ID:id DPTOS IGUAL dec_exp_n1:valor {:   int index = 
 																	else if (e.equals("entero")) varNuevo = new DatosVar(e,id, FuncionesAyuda.toInteger(valor));
 																	else if (e.equals("buleano")) varNuevo = new DatosVar(e,id, valor);
 																	else if (e.equals("caracter")) varNuevo = new DatosVar(e,id, valor);
-																	else report_fatal_error("EL TIPO DE VARIABLE INDICADO NO EXISTE O NO ES POSIBLE INICIALIZARLO: <" +e+">", id);                     
+																	else report_fatal_error("EL TIPO DE VARIABLE INDICADO NO EXISTE O NO ES POSIBLE INICIALIZARLO: <" +e+">", id);         
+																	if(varNuevo.getValor() == null) report_fatal_error("El valor pasado por parámetro <"+ valor+ "> de la variable <"+ id +"> no puede ser <"+ e +">", id);            
   																	nuevasVariables.add(varNuevo);
-																	if(varNuevo.getValor() == null) report_fatal_error("El valor pasado por parámetro <"+ valor+ "> de la variable <"+ id +"> no puede ser <"+ e +">", id);
+																	
 																:}
 				| keytipo:e identificado                 	   	{:for (DatosVar siguiente: nuevasVariables){
-																		if(siguiente.getTipo().equals("declarar")) if(siguiente.valorPorDefecto(e,registerTable)) report_fatal_error("EL TIPO DE VARIABLE INDICADO NO EXISTE <" + e +">", e);;
+																		if(siguiente.getTipo().equals("|declarar")) if(siguiente.valorPorDefecto(e,registerTable)) report_fatal_error("EL TIPO DE VARIABLE INDICADO NO EXISTE <" + e +">", e);;
 																}:}
 				;
 
 // Desde ID hasta ID, ID, ID,... 1 a N
 identificado ::= identificado COMA ID:id                    	{: 	int index = FuncionesAyuda.buscarVariable(symbolTable, id);
 																	if (index != -1){ report_fatal_error("YA EXISTE LA VARIABLE <" + id + "> EN LA TABLA DE SÍMBOLOS", id); };
-																	nuevasVariables.add(new DatosVar("declarar",id, ""));
+																	nuevasVariables.add(new DatosVar("|declarar",id, ""));
 																:}
 					| ID:id                        				{:	int index = FuncionesAyuda.buscarVariable(symbolTable, id);
 																	if (index != -1){ report_fatal_error("YA EXISTE LA VARIABLE <" + id + "> EN LA TABLA DE SÍMBOLOS", id); };
-																	nuevasVariables.add(new DatosVar("declarar",id, ""));
+																	nuevasVariables.add(new DatosVar("|declarar",id, ""));
 																:}
 				;	
 				

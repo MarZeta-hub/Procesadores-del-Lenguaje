@@ -786,9 +786,10 @@ System.out.println("Calculadora: " + e.toString());
 																	else if (e.equals("entero")) varNuevo = new DatosVar(e,id, FuncionesAyuda.toInteger(valor));
 																	else if (e.equals("buleano")) varNuevo = new DatosVar(e,id, valor);
 																	else if (e.equals("caracter")) varNuevo = new DatosVar(e,id, valor);
-																	else report_fatal_error("EL TIPO DE VARIABLE INDICADO NO EXISTE O NO ES POSIBLE INICIALIZARLO: <" +e+">", id);                     
+																	else report_fatal_error("EL TIPO DE VARIABLE INDICADO NO EXISTE O NO ES POSIBLE INICIALIZARLO: <" +e+">", id);         
+																	if(varNuevo.getValor() == null) report_fatal_error("El valor pasado por parámetro <"+ valor+ "> de la variable <"+ id +"> no puede ser <"+ e +">", id);            
   																	nuevasVariables.add(varNuevo);
-																	if(varNuevo.getValor() == null) report_fatal_error("El valor pasado por parámetro <"+ valor+ "> de la variable <"+ id +"> no puede ser <"+ e +">", id);
+																	
 																
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("decl_variable",9, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-4)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
@@ -803,7 +804,7 @@ System.out.println("Calculadora: " + e.toString());
 		String e = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-1)).value;
 		//@@CUPDBG7
 for (DatosVar siguiente: nuevasVariables){
-																		if(siguiente.getTipo().equals("declarar")) if(siguiente.valorPorDefecto(e,registerTable)) report_fatal_error("EL TIPO DE VARIABLE INDICADO NO EXISTE <" + e +">", e);;
+																		if(siguiente.getTipo().equals("|declarar")) if(siguiente.valorPorDefecto(e,registerTable)) report_fatal_error("EL TIPO DE VARIABLE INDICADO NO EXISTE <" + e +">", e);;
 																}
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("decl_variable",9, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
@@ -819,7 +820,7 @@ for (DatosVar siguiente: nuevasVariables){
 		//@@CUPDBG8
  	int index = FuncionesAyuda.buscarVariable(symbolTable, id);
 																	if (index != -1){ report_fatal_error("YA EXISTE LA VARIABLE <" + id + "> EN LA TABLA DE SÍMBOLOS", id); };
-																	nuevasVariables.add(new DatosVar("declarar",id, ""));
+																	nuevasVariables.add(new DatosVar("|declarar",id, ""));
 																
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("identificado",13, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
@@ -835,7 +836,7 @@ for (DatosVar siguiente: nuevasVariables){
 		//@@CUPDBG9
 	int index = FuncionesAyuda.buscarVariable(symbolTable, id);
 																	if (index != -1){ report_fatal_error("YA EXISTE LA VARIABLE <" + id + "> EN LA TABLA DE SÍMBOLOS", id); };
-																	nuevasVariables.add(new DatosVar("declarar",id, ""));
+																	nuevasVariables.add(new DatosVar("|declarar",id, ""));
 																
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("identificado",13, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
