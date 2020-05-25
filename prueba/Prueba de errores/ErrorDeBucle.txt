@@ -1,0 +1,3 @@
+MIENTRAS 2 
+	entero hola := 20;
+FINMIENTRAS

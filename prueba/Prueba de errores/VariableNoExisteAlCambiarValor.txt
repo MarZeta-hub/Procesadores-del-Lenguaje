@@ -1,0 +1,3 @@
+<!-- Al intentar cambiar el valor de una variable, no existe-->
+
+ent2 := 7;

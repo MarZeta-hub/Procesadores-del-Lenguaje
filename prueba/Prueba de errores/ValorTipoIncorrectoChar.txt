@@ -1,0 +1,5 @@
+<!-- Se da un valor que no puede recibir un caracter
+	el cual son todos los demas
+ -->
+
+caracter ent := 12;

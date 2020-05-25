@@ -1,0 +1,10 @@
+<!-- Se intenta registrar un struct que ya existe-->
+
+Struct bola{
+real radio;
+caracter color;
+}
+
+struct bola{
+real diametro;
+}

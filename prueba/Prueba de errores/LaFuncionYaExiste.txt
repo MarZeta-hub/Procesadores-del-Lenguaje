@@ -1,0 +1,8 @@
+<!-- en el caso de que la funcion ya exista-->
+
+funcion auxiliar (REAL re1, REAL re2) return REAL {
+entero ent1;
+}
+funcion auxiliar (REAL re1, REAL re2) return REAL {
+entero ent12;
+}

@@ -1,0 +1,3 @@
+<!-- Se iguala una variable a una estructura que no existe -->
+
+REAL auxiliar := balon.radio;

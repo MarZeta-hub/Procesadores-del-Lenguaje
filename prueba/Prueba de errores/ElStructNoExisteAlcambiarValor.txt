@@ -1,0 +1,3 @@
+<!-- Se iguala una  estructura a una variable o  dato, donde la estructura no existe -->
+
+balon.radio := auxiliar ;

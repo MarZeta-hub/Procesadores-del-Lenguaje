@@ -1,0 +1,4 @@
+<!-- se intenta registrar en la tabla de simbolos una variable ya registrada -->
+
+entero ent := 12;
+entero ent := 9;

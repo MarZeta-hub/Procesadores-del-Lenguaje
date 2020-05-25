@@ -1,0 +1,3 @@
+<!-- la funcion no existe -->
+
+REAL condicion := noexisto(9);

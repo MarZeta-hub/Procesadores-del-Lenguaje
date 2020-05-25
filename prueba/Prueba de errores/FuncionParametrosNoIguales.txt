@@ -1,0 +1,9 @@
+<!-- los parámetros dados en la funcion para obtener el valor
+de la función no son correctos-->
+
+funcion auxiliar (REAL re1, REAL re2) return REAL {
+entero ent1;
+}
+
+Entero en2 := auxiliar(true, false);
+

@@ -509,7 +509,7 @@ public class Parser extends java_cup.runtime.lr_parser {
 
   ComplexSymbolFactory f = new ComplexSymbolFactory();
   symbolFactory = f;
-  File file = new File("prueba/input2.txt");
+  File file = new File("prueba/grupo_T_pruebaOK.txt");
   FileInputStream fis = null;
   try {
     fis = new FileInputStream(file);
@@ -782,10 +782,10 @@ System.out.println("Calculadora: " + e.toString());
    int index = FuncionesAyuda.buscarVariable(symbolTable, id);
 																	if (index != -1){ report_fatal_error("YA EXISTE LA VARIABLE <" + id + "> EN LA TABLA DE SÍMBOLOS", id); };
 																	DatosVar varNuevo = new DatosVar();
-																	if(e.equals("real")) varNuevo = new DatosVar(e,id, FuncionesAyuda.toReal(valor));
-																	else if (e.equals("entero")) varNuevo = new DatosVar(e,id, FuncionesAyuda.toInteger(valor));
-																	else if (e.equals("buleano")) varNuevo = new DatosVar(e,id, valor);
-																	else if (e.equals("caracter")) varNuevo = new DatosVar(e,id, valor);
+																	if(e.equals("real")){ if(!(valor.toString().equals("true")) && !(valor.toString().equals("false"))) varNuevo = new DatosVar(e,id, FuncionesAyuda.toReal(valor));}
+																	else if (e.equals("entero")){ if( !(valor.toString().equals("true")) && !(valor.toString().equals("false"))) varNuevo = new DatosVar(e,id, FuncionesAyuda.toInteger(valor));}
+																	else if (e.equals("buleano")){ if( valor.toString().equals("true") || valor.toString().equals("false") ) varNuevo = new DatosVar(e,id, valor);}
+																	else if (e.equals("caracter")){ if(valor.toString().length() == 1) varNuevo = new DatosVar(e,id, valor);}
 																	else report_fatal_error("EL TIPO DE VARIABLE INDICADO NO EXISTE O NO ES POSIBLE INICIALIZARLO: <" +e+">", id);         
 																	if(varNuevo.getValor() == null) report_fatal_error("El valor pasado por parámetro <"+ valor+ "> de la variable <"+ id +"> no puede ser <"+ e +">", id);            
   																	nuevasVariables.add(varNuevo);
@@ -853,6 +853,7 @@ for (DatosVar siguiente: nuevasVariables){
  if(FuncionesAyuda.buscarRegistro(registerTable, id) != -1) report_fatal_error("YA EXISTE EL ID: <" + id + "> EN LA TABLA DE REGISTRO", id); 
 																  registerTable.add(new TablaRegistro(id,nuevasVariables) );
 																  nuevasVariables = new ArrayList<DatosVar>();
+																
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("decl_struct",8, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-4)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -889,7 +890,7 @@ for (DatosVar siguiente: nuevasVariables){
 		Location tipoxright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-3)).xright;
 		String tipo = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-3)).value;
 		//@@CUPDBG11
- if(FuncionesAyuda.buscarRegistro(registerTable, id) == -1) report_fatal_error("YA EXISTE EL ID:  <" + id + "> EN LA TABLA DE REGISTRO", id);
+ if(FuncionesAyuda.buscarRegistro(registerTable, id) != -1) report_fatal_error("YA EXISTE EL ID:  <" + id + "> EN LA TABLA DE REGISTRO", id);
 					if(FuncionesAyuda.agregarEntrada(id, tipo, input, registerTable)) report_fatal_error("ERROR AL REALIZAR LA DECLARACION DE LA FUNCION <"+id+">", id);
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("decl_funcion",12, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-9)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
@@ -963,7 +964,7 @@ RESULT = e;
 		Location erxright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).xright;
 		Object er = (Object)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-1)).value;
 		//@@CUPDBG15
- if ((String.valueOf(e).equals("null")) || !(e.getClass().getSimpleName().equals("Boolean"))) System.out.println("No hay una condición"); 
+ if ((String.valueOf(e).equals("null")) || !(e.getClass().getSimpleName().equals("Boolean")) ) report_fatal_error("La expresión obtenido <" + e + "> no es valor condicional", e); 
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("condicional",7, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-4)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;

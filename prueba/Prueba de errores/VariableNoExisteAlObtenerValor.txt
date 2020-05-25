@@ -1,0 +1,3 @@
+<!--Al intentar obtener el valor de una variable, la variable no existe -->
+
+re1;

@@ -3,26 +3,35 @@
    ### Funcion de dos argumentos
    FUNCION potencia( REAl a, ENTERO e ) RETURN REAL{
      REAL r := 1;
+     entero e;
+     real a;
      ENTERO i := 1;
      MIENTRAS i < e
-       R := r*a;
-       I := i + 1;
+       r := r * a;
+       i := i + 1;
      FINMIENTRAS
    } 
+    FUNCION cuadrado( REAL a ) RETURN REAL {
+    real ab;
+      ab * ab; 
+  }  ### Sobrecarga de funciones
+
+
    ENTERO en2 := 6;                             # con asignación de valor 
    
    ### Expresiones 
    5 + 6; # operacion 
-   re1 := 3.7;                                  # asignación simple 
+   real re1 := 3.7;                                  # asignación simple 
    re1 := 3.7 + cuadrado(re1);                  # usando llamada a función
-   re2 := potencia(re1, en2);
+   real re2 := potencia(re1, en2);
+   buleano bo3 := false;
    
    ### Sentencia condicional de control de flujo 
-   SI en2 == 3 OR bo3 AND re1                   #condicion
+   SI ((en2 == 3) OR bo3) AND re1                   #condicion
    ENTONCES                                     #cuerpo cuando la condición esverdadera 
   	 en2 := en2 + 3; 
-   SINO                                         # cuerpo cuando la condición es falsa, llamada 
-   	recursivare1 := cuadrado( cuadrado (en2));
+   SINO                                         # cuerpo cuando la condición es falsa, llamada recursiva
+   	re1 := cuadrado( cuadrado (en2));
    FINSI                                       #fin de la sentencia
     
     

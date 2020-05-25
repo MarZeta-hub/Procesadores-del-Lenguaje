@@ -1,0 +1,5 @@
+<!-- Se da un valor que no puede recibir un buleano
+	el cual son todas las demás;
+ -->
+
+buleano bot := 1;

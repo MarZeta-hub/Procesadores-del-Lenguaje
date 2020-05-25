@@ -1,2 +1,0 @@
-struct hola{ real asl;}
-struct hola{ entero ola;}

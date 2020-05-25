@@ -1,0 +1,6 @@
+<!-- Se da un valor que no puede recibir un entero
+	el cual solo puede ser un buleano, ya que el char te da el
+	numero ASCII y el real lo trunca
+ -->
+
+entero ent := true;
