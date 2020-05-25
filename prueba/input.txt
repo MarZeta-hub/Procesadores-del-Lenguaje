@@ -1,11 +1,5 @@
   <!-- Definicion de funciones -->
 
-  FUNCION cuadrado( REAL a ) RETURN REAL {
-      a * a; 
-  }  ### Sobrecarga de funciones
-  FUNCION cuadrado( ENTERO e ) RETURN ENTERO{
-      e * e; 
-  }
    ### Funcion de dos argumentos
    FUNCION potencia( REAl a, ENTERO e ) RETURN REAL{
      REAL r := 1;

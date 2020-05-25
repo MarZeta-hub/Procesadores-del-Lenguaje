@@ -25,7 +25,6 @@ parser code {:
 	public void report_error(String message, Object info) {
    
         /* Crea un StringBuffer llamado 'm' con el string 'Error' en él. */
-
         StringBuffer m = new StringBuffer("Error");
    
         /* Chequea si la información pasada al método es del mismo
@@ -72,13 +71,14 @@ parser code {:
     public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception{ 
         System.out.println("Error no recuperable de sintaxis: "+s.value+" Linea "+(s.left+1)+" columna "+(s.right+1) );
     }
+
 :}
 
 /* define how to connect to the scanner! */
 init with {:
   ComplexSymbolFactory f = new ComplexSymbolFactory();
   symbolFactory = f;
-  File file = new File("prueba/input2.txt");
+  File file = new File("prueba/vacio.txt");
   FileInputStream fis = null;
   try {
     fis = new FileInputStream(file);
@@ -103,10 +103,8 @@ terminal String     ID;
 /* Non terminals */
 non terminal programa, blq_sentencias, sentencia, sent_decl, sent_uso, sent_flujo,
 			 asignacion, condicional, decl_struct,decl_variable,
-			 bucle, lista_struct, decl_funcion, lexp,
-			  identificado_funcion, declaradores,identificado;
-non terminal String keytipo;
-non terminal String type_struct;
+			 bucle, lista_struct, decl_funcion, identificado;
+non terminal String keytipo, type_struct, declaradores, identificado_funcion,lexp;
 non terminal Object dec_exp_n1, dec_exp_n2, dec_exp_n3, dec_exp_n4, dec_exp_n5;
 
 /* Precedencia */
@@ -123,8 +121,9 @@ precedence left UMINUS;
 programa ::= blq_sentencias {: System.out.println("------------------Variables en la tabla de símbolos---------------");
 								for (DatosVar siguiente: symbolTable) System.out.println(siguiente.toString());
 							   System.out.println("\n ---------------Variables en la tabla de registros--------------");
-							   	for(TablaRegistro siguiente: registerTable){ System.out.println(siguiente.getNombreRegistro());
-							   		for(DatosVar siguiente1 : siguiente.registro) System.out.println(siguiente1.toString2()); }:}
+							   	for(TablaRegistro siguiente: registerTable){ System.out.println("+ NOMBRE: " + siguiente.getNombreRegistro());
+							   		for(DatosVar siguiente1 : siguiente.registro) System.out.println(siguiente1.toString2()); }
+									:}
 		   | /*lambda*/
 		   ;
  
@@ -155,7 +154,7 @@ sent_flujo ::= condicional       //IF expresion ENTONCES BLOQUE SENTENCIAS ELSE 
 			
 //SENTENCIAS DE INICIALIZACION
 sent_uso ::= asignacion SEMI     // ID := valor; Ó ID.ID... := valor
-		   | dec_exp_n1:e SEMI	{:System.out.println("Calculadora " + e.toString());:} // Una expresion tipo calculadora
+		   | dec_exp_n1:e SEMI	{:System.out.println("Calculadora: " + e.toString());:} // Una expresion tipo calculadora
 		   ;
 
 
@@ -188,8 +187,9 @@ identificado ::= identificado COMA ID:id                    	{: 	int index = Fun
 				;	
 				
 //Estructura de un Struct
-decl_struct ::= STRUCT ID:id LCORCH lista_struct RCORCH 		{: registerTable.add(new TablaRegistro(id,nuevasVariables) );
-																   nuevasVariables = new ArrayList<DatosVar>();:}
+decl_struct ::= STRUCT ID:id LCORCH lista_struct RCORCH 		{: if(FuncionesAyuda.buscarRegistro(registerTable, id) == -1) report_fatal_error("YA EXISTE EL ID: <" + id + "> EN LA TABLA DE REGISTRO", id); 
+																  registerTable.add(new TablaRegistro(id,nuevasVariables) );
+																  nuevasVariables = new ArrayList<DatosVar>();:}
 			  ;
   
 //CONTENIDO DE UN STRUCT
@@ -198,18 +198,18 @@ lista_struct ::= decl_variable SEMI lista_struct
 			   ;
 							
 //DECLARAR UNA FUNCION
-decl_funcion ::= FUNCION ID:id LPAREN identificado_funcion RPAREN RETURN keytipo:tipo LCORCH blq_sentencias RCORCH
-				 {:
-					 registerTable.add(new TablaRegistro(id,nuevasVariables));:}
+decl_funcion ::= FUNCION ID:id LPAREN identificado_funcion:input RPAREN RETURN keytipo:tipo LCORCH blq_sentencias RCORCH
+				 {: if(FuncionesAyuda.buscarRegistro(registerTable, id) == -1) report_fatal_error("YA EXISTE EL ID:  <" + id + "> EN LA TABLA DE REGISTRO", id);
+					if(FuncionesAyuda.agregarEntrada(id, tipo, input, registerTable)) report_fatal_error("ERROR AL REALIZAR LA DECLARACION DE LA FUNCION <"+id+">", id);:}
 		  	   ;
 
 //PARAMETROS DE ENTRADA DE UNA FUNCION
-identificado_funcion ::= declaradores 
+identificado_funcion ::= declaradores:e {:RESULT = e;:} 
 			   		   |
 			           ;
 			           
-declaradores ::= declaradores COMA keytipo:tipo ID:id {: nuevasVariables.add(new DatosVar(tipo,id, ""));:}
-			   	| keytipo:tipo ID:id				  {: nuevasVariables.add(new DatosVar(tipo,id, ""));:}
+declaradores ::= declaradores:e COMA keytipo:tipo ID:id {: RESULT = e + "_" + tipo + "-" + id; :}
+			   	| keytipo:tipo ID:id				    {: RESULT = tipo+"-"+id;:}
 			   	;	           
 
 //CONDICIONAL : IF expresion ENTONCES bloque (ELSE bloque) FINSI
@@ -230,11 +230,6 @@ keytipo ::= DENTERO   {: RESULT = "entero";  :}
 						RESULT = e; :}
 		  ;
 			
-//USADO PARA LLAMAR FUNCIONES				
-lexp ::= lexp COMA dec_exp_n1
-	   | dec_exp_n1
-	   ;
-	   
 // ID := valor; Ó ID.ID... := valor
 asignacion ::= type_struct:id DPTOS IGUAL dec_exp_n1:e {: DatosVar objetivo = FuncionesAyuda.obtenerValor(id, symbolTable);
 														 if(objetivo == null) report_fatal_error("No existe el struct <"+id+">", id);
@@ -287,6 +282,26 @@ dec_exp_n5 ::= NUMBER:e                                {:RESULT = e; :}
 														 if(objetivo == null) report_fatal_error("No existe el struct <"+id+">", id);
 														 RESULT = objetivo.getValor() ;  
 													   :}
-			 | ID LPAREN lexp RPAREN
+			 | ID:id LPAREN lexp:e RPAREN				   {: int index = FuncionesAyuda.buscarRegistro(registerTable, id);
+														  if(index ==-1) report_fatal_error("No existe la funcion <"+id+">", id);
+														  String[] var = e.split(","); 
+														  Object valor = null;
+														  for(int i = 0; i<var.length; i++){
+																String varAhora = var[i];
+																String tipo = registerTable.get(index).registro.get(0).estructura.get(i).getTipo();
+																
+																if(tipo.equals("real")) valor = FuncionesAyuda.toReal(varAhora);
+																else if (tipo.equals("entero")) valor =  FuncionesAyuda.toInteger(varAhora);
+																else if (tipo.equals("buleano")) valor = varAhora;
+																else if (tipo.equals("caracter")) valor = varAhora;
+														  		if((valor == null) ) report_fatal_error("Los valores pasador por parametro son erroneos <"+id+">", id);
+														   }
+															RESULT = 0;:}
 			 ;
+			 		 
+//USADO PARA LLAMAR FUNCIONES				
+lexp ::= lexp:e1 COMA dec_exp_n1:e2 {:RESULT = e1 + "," + e2.toString();:}
+	   | dec_exp_n1:e1				{:RESULT = e1.toString();:}
+	   ;
+	   
 		

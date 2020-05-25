@@ -81,4 +81,21 @@ public class FuncionesAyuda {
 		 return objetivo;
 	}
 	
+	public static boolean agregarEntrada(String id, String output, String input, ArrayList<TablaRegistro> registerTable) {
+		ArrayList<DatosVar> resultado = new ArrayList<DatosVar>();
+		String[] arrayDecla =  input.split("_");
+		DatosVar inputVars = new DatosVar ("|Input","|Input", "Input");
+		String[] separacion = new String[2];
+		for(int i = 0; i < arrayDecla.length; i++) {
+			separacion = arrayDecla[i].split("-");
+			inputVars.estructura.add( new DatosVar(separacion[0], separacion[1], "")) ;
+ 		}
+		resultado.add(inputVars);
+		DatosVar outVar = new DatosVar ("|Output","|Output", "output");
+		outVar.estructura.add(new DatosVar(output,output,output)) ;
+		resultado.add(outVar);
+		registerTable.add(new TablaRegistro(id, resultado));
+		return false;
+	}
+	
 }

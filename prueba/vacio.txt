@@ -1,6 +1,2 @@
-struct bola {
-real radio;
-}
-
-bola futbol;
-futbol.radio := 23;
+struct hola{ real asl;}
+struct hola{ entero ola;}

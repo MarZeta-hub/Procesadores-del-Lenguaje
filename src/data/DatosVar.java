@@ -81,8 +81,14 @@ public class DatosVar implements Cloneable{
 	}
 	
 	public String toString2() {
-
-		return "Variable [tipo=" + tipo + ", id=" + ID + "]";
+		String salida = "";
+		if(this.estructura != null) {
+			ArrayList<DatosVar> nuevasVariables = estructura;
+			for (DatosVar siguiente: nuevasVariables){
+				salida = salida+"\n----" + siguiente.toString2();
+			}
+		}
+		return "Variable [tipo=" + tipo + ", id=" + ID + "]" + salida;
 	}
 
 }
