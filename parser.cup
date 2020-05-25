@@ -78,7 +78,7 @@ parser code {:
 init with {:
   ComplexSymbolFactory f = new ComplexSymbolFactory();
   symbolFactory = f;
-  File file = new File("prueba/vacio.txt");
+  File file = new File("prueba/input2.txt");
   FileInputStream fis = null;
   try {
     fis = new FileInputStream(file);
@@ -187,7 +187,7 @@ identificado ::= identificado COMA ID:id                    	{: 	int index = Fun
 				;	
 				
 //Estructura de un Struct
-decl_struct ::= STRUCT ID:id LCORCH lista_struct RCORCH 		{: if(FuncionesAyuda.buscarRegistro(registerTable, id) == -1) report_fatal_error("YA EXISTE EL ID: <" + id + "> EN LA TABLA DE REGISTRO", id); 
+decl_struct ::= STRUCT ID:id LCORCH lista_struct RCORCH 		{: if(FuncionesAyuda.buscarRegistro(registerTable, id) != -1) report_fatal_error("YA EXISTE EL ID: <" + id + "> EN LA TABLA DE REGISTRO", id); 
 																  registerTable.add(new TablaRegistro(id,nuevasVariables) );
 																  nuevasVariables = new ArrayList<DatosVar>();:}
 			  ;

@@ -509,7 +509,7 @@ public class Parser extends java_cup.runtime.lr_parser {
 
   ComplexSymbolFactory f = new ComplexSymbolFactory();
   symbolFactory = f;
-  File file = new File("prueba/vacio.txt");
+  File file = new File("prueba/input2.txt");
   FileInputStream fis = null;
   try {
     fis = new FileInputStream(file);
@@ -849,7 +849,7 @@ for (DatosVar siguiente: nuevasVariables){
 		Location idxright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-3)).xright;
 		String id = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-3)).value;
 		//@@CUPDBG10
- if(FuncionesAyuda.buscarRegistro(registerTable, id) == -1) report_fatal_error("YA EXISTE EL ID: <" + id + "> EN LA TABLA DE REGISTRO", id); 
+ if(FuncionesAyuda.buscarRegistro(registerTable, id) != -1) report_fatal_error("YA EXISTE EL ID: <" + id + "> EN LA TABLA DE REGISTRO", id); 
 																  registerTable.add(new TablaRegistro(id,nuevasVariables) );
 																  nuevasVariables = new ArrayList<DatosVar>();
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("decl_struct",8, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-4)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
