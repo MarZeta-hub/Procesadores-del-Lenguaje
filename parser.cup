@@ -118,11 +118,13 @@ precedence left UMINUS;
 /* The grammar rules */
 
 //Inicio del análisis del texto
-programa ::= blq_sentencias {: System.out.println("------------------Variables en la tabla de símbolos---------------");
-								for (DatosVar siguiente: symbolTable) System.out.println(siguiente.toString());
-							   System.out.println("\n ---------------Variables en la tabla de registros--------------");
-							   	for(TablaRegistro siguiente: registerTable){ System.out.println("+ NOMBRE: " + siguiente.getNombreRegistro());
-							   		for(DatosVar siguiente1 : siguiente.registro) System.out.println(siguiente1.toString2()); }
+programa ::= blq_sentencias {: String salida = ""; 
+							   salida = "------------------Variables en la tabla de símbolos---------------\n";
+								for (DatosVar siguiente: symbolTable) salida = salida + siguiente.toString() + "\n";
+							   salida = salida + "\n\n ---------------Variables en la tabla de registros--------------\n";
+							   	for(TablaRegistro siguiente: registerTable){ salida = salida + "+ NOMBRE: " + siguiente.getNombreRegistro() + "\n ";
+							   		for(DatosVar siguiente1 : siguiente.registro) salida = salida + siguiente1.toString2() + "\n";}
+								System.out.println(salida); FuncionesAyuda.imprimirVar(salida);
 									:}
 		   | /*lambda*/
 		   ;
