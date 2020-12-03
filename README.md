@@ -2,6 +2,10 @@
 ### Desarrollado por Marcelino Tena Blanco
 Total de prácticas de procesadores del lenguaje. Esto es debido a que las prácticas se hacen por entregas parciales y la entrega parcial es el total de todas.
 Se basa en el análisis de un lenguaje, para comprobar errores de léxico, sintáctico y semántico. Todo está detallado en las memorias.
+# Requisitos
+* Java JDK
+* JFLEX
+* CUP
 # Práctica Parcial Léxico
 ### Fichero: lexer.jflex
 ### Memoria: Memoria Léxico.pdf
