@@ -23,6 +23,7 @@ Nota: este fichero es el final, lo que significa que también hay elementos del 
 ### Todos los derechos reservados.
 ### No se permite el plagio ni la copia.
 ### Se permite el estudio y la modificación SOLO PARA USO PERSONAL Y PRIVADO.
+### Bajo licencia GNU Affero General Public License v3.0
 ### JFLEX, CUP, Java y JDK tienen sus propias licencias:
 * CUP: https://www.cs.princeton.edu/~appel/modern/java/CUP/
 * JFLEX: https://jflex.de/
